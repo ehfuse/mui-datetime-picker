@@ -163,6 +163,7 @@ export function DateTimePicker({
                         width,
                         height,
                         overflow: "hidden",
+                        userSelect: "none",
                         ...(slotProps?.paper as any)?.sx,
                     },
                 },

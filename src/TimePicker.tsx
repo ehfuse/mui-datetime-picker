@@ -135,6 +135,7 @@ export function TimePicker({
                         borderRadius: 2,
                         boxShadow: 3,
                         minWidth: hasSeconds ? 165 : 110,
+                        userSelect: "none",
                     },
                 },
             }}

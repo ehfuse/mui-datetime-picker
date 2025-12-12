@@ -274,7 +274,14 @@ export function TimeSelector({
     };
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                userSelect: "none",
+            }}
+        >
             {/* 현재 선택된 시간 표시 */}
             {showHeader && (
                 <Box

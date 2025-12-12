@@ -102,6 +102,7 @@ export function DatePicker({
                         width: 300,
                         height: showFooter ? 380 : 332,
                         overflow: "hidden",
+                        userSelect: "none",
                         ...(slotProps?.paper as any)?.sx,
                     },
                 },

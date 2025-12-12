@@ -1119,6 +1119,7 @@ export function SimpleCalendar({
                     display: "flex",
                     flexDirection: "column",
                     height: "100%",
+                    userSelect: "none",
                 }}
             >
                 {calendarContent}
@@ -1129,7 +1130,14 @@ export function SimpleCalendar({
 
     // 시간 선택이 있으면 전체 column: 상단(달력+시간 row) + 하단(footer)
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                userSelect: "none",
+            }}
+        >
             {/* 상단: 달력 + 시간 (row) */}
             <Box
                 sx={{
