@@ -1,0 +1,51 @@
+{
+    "name": "@ehfuse/mui-popup-calendar",
+    "version": "1.0.0",
+    "description": "MUI based popup calendar and time picker components",
+    "main": "dist/index.js",
+    "module": "dist/index.esm.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.esm.js",
+            "require": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "node build.js",
+        "prepublishOnly": "npm run build"
+    },
+    "keywords": [
+        "mui",
+        "material-ui",
+        "calendar",
+        "datepicker",
+        "timepicker",
+        "popup",
+        "react"
+    ],
+    "author": "김영진 (ehfuse@gmail.com)",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ehfuse/mui-popup-calendar.git"
+    },
+    "peerDependencies": {
+        "@mui/material": ">=5.0.0",
+        "@emotion/react": ">=11.0.0",
+        "@emotion/styled": ">=11.0.0",
+        "@ehfuse/overlay-scrollbar": ">=1.0.0",
+        "react": ">=17.0.0",
+        "react-dom": ">=17.0.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.0",
+        "@types/react-dom": "^18.2.0",
+        "esbuild": "^0.24.0",
+        "typescript": "^5.3.0"
+    }
+}
