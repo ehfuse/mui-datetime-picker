@@ -6,6 +6,7 @@
     -   [Date Selection](#date-selection)
     -   [Time Selection](#time-selection)
     -   [Date + Time Selection](#date--time-selection)
+    -   [Month Selection](#month-selection)
 -   [Advanced Usage](#advanced-usage)
     -   [Date Range Restriction](#date-range-restriction)
     -   [Time Range Restriction](#time-range-restriction)
@@ -147,6 +148,50 @@ function DateTimePickerExample() {
                     setTimeValue({ hour, minute, second })
                 }
                 timeFormat="HH:mm:ss"
+            />
+        </>
+    );
+}
+```
+
+---
+
+### Month Selection
+
+Example for selecting year and month only, without date.
+
+```tsx
+import { useState, useRef } from "react";
+import { Button } from "@mui/material";
+import { PopupCalendar } from "@ehfuse/mui-popup-calendar";
+
+function MonthPickerExample() {
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef<HTMLButtonElement>(null);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+
+    const handleMonthSelect = (year: number, month: number) => {
+        setSelectedYear(year);
+        setSelectedMonth(month);
+    };
+
+    return (
+        <>
+            <Button
+                ref={anchorRef}
+                variant="outlined"
+                onClick={() => setOpen(true)}
+            >
+                {`${selectedYear}/${selectedMonth + 1}`}
+            </Button>
+            <PopupCalendar
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={anchorRef}
+                mode="date"
+                monthOnly={true}
+                onMonthSelect={handleMonthSelect}
             />
         </>
     );

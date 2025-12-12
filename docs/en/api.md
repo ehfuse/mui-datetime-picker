@@ -55,6 +55,8 @@ import { PopupCalendar } from "@ehfuse/mui-popup-calendar";
 | `hideDisabledTime` | `boolean`                                                 | `false`          | -        | Hide disabled time options                        |
 | `locale`           | [`LocaleProp`](#localeprop)                               | `"ko"`           | -        | Locale (string or object)                         |
 | `texts`            | [`CalendarTexts`](#calendartexts)                         | -                | -        | Partial text overrides                            |
+| `monthOnly`        | `boolean`                                                 | `false`          | -        | Month-only selection mode                         |
+| `onMonthSelect`    | `(year: number, month: number) => void`                   | -                | -        | Month selection callback                          |
 
 > **Note**: PopupCalendar extends MUI `PopoverProps`. You can use all Popover props such as `anchorOrigin`, `transformOrigin`, `slotProps`, etc.
 
@@ -93,6 +95,8 @@ import { SimpleCalendar } from "@ehfuse/mui-popup-calendar";
 | `hideDisabledTime` | `boolean`                                                 | `false`          | -        | Hide disabled time options  |
 | `locale`           | [`LocaleProp`](#localeprop)                               | `"ko"`           | -        | Locale (string or object)   |
 | `texts`            | [`CalendarTexts`](#calendartexts)                         | -                | -        | Partial text overrides      |
+| `monthOnly`        | `boolean`                                                 | `false`          | -        | Month-only selection mode   |
+| `onMonthSelect`    | `(year: number, month: number) => void`                   | -                | -        | Month selection callback    |
 
 ---
 

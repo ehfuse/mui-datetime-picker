@@ -13,6 +13,7 @@ import {
 import SimpleCalendarPage from "./pages/SimpleCalendarPage";
 import TimePickerPage from "./pages/TimePickerPage";
 import PopupCalendarPage from "./pages/PopupCalendarPage";
+import MonthPickerPage from "./pages/MonthPickerPage";
 import HomePage from "./pages/HomePage";
 
 const DRAWER_WIDTH = 220;
@@ -71,6 +72,11 @@ function App() {
                                 <ListItemText primary="PopupCalendar" />
                             </ListItemButton>
                         </ListItem>
+                        <ListItem disablePadding>
+                            <ListItemButton component={Link} to="/month-picker">
+                                <ListItemText primary="MonthPicker" />
+                            </ListItemButton>
+                        </ListItem>
                     </List>
                 </Box>
             </Drawer>
@@ -88,6 +94,7 @@ function App() {
                         path="/popup-calendar"
                         element={<PopupCalendarPage />}
                     />
+                    <Route path="/month-picker" element={<MonthPickerPage />} />
                 </Routes>
             </Box>
         </Box>

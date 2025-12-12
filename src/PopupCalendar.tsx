@@ -62,6 +62,9 @@ export function PopupCalendar({
     // 로케일 관련
     locale = defaultLocale,
     texts,
+    // 년월만 선택
+    monthOnly = false,
+    onMonthSelect,
     ...popoverProps
 }: PopupCalendarProps) {
     const hasSeconds = timeFormat === "HH:mm:ss" || timeFormat === "hh:mm:ss";
@@ -228,6 +231,8 @@ export function PopupCalendar({
                 hideDisabledTime={hideDisabledTime}
                 locale={locale}
                 texts={texts}
+                monthOnly={monthOnly}
+                onMonthSelect={onMonthSelect}
             />
         </Popover>
     );

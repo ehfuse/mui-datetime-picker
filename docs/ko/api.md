@@ -55,6 +55,8 @@ import { PopupCalendar } from "@ehfuse/mui-popup-calendar";
 | `hideDisabledTime` | `boolean`                                                 | `false`          | -    | 선택 불가 시간 숨김 여부                |
 | `locale`           | [`LocaleProp`](#localeprop)                               | `"ko"`           | -    | 로케일 (문자열 또는 객체)               |
 | `texts`            | [`CalendarTexts`](#calendartexts)                         | -                | -    | 텍스트 부분 커스터마이징                |
+| `monthOnly`        | `boolean`                                                 | `false`          | -    | 년월만 선택 모드                        |
+| `onMonthSelect`    | `(year: number, month: number) => void`                   | -                | -    | 년월 선택 콜백                          |
 
 > **참고**: PopupCalendar는 MUI `PopoverProps`를 확장합니다. `anchorOrigin`, `transformOrigin`, `slotProps` 등 Popover의 모든 Props를 사용할 수 있습니다.
 
@@ -93,6 +95,8 @@ import { SimpleCalendar } from "@ehfuse/mui-popup-calendar";
 | `hideDisabledTime` | `boolean`                                                 | `false`          | -    | 선택 불가 시간 숨김 여부  |
 | `locale`           | [`LocaleProp`](#localeprop)                               | `"ko"`           | -    | 로케일 (문자열 또는 객체) |
 | `texts`            | [`CalendarTexts`](#calendartexts)                         | -                | -    | 텍스트 부분 커스터마이징  |
+| `monthOnly`        | `boolean`                                                 | `false`          | -    | 년월만 선택 모드          |
+| `onMonthSelect`    | `(year: number, month: number) => void`                   | -                | -    | 년월 선택 콜백            |
 
 ---
 

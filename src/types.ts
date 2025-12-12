@@ -77,6 +77,8 @@ export interface SimpleCalendarProps {
     showToday?: boolean; // 오늘 버튼 표시 여부
     showFooter?: boolean; // 푸터 표시 여부 (기본값: true)
     autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: false)
+    monthOnly?: boolean; // 년월만 선택 (기본값: false)
+    onMonthSelect?: (year: number, month: number) => void; // 년월 선택 콜백
     showTimePicker?: boolean; // 시간 선택 표시 여부
     timeValue?: TimeValue; // 시간 값
     onTimeChange?: (hour: number, minute: number, second?: number) => void; // 시간 변경 콜백
@@ -146,4 +148,6 @@ export interface PopupCalendarProps
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부
     locale?: LocaleProp; // 로케일 (기본값: 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
+    monthOnly?: boolean; // 년월만 선택 (기본값: false)
+    onMonthSelect?: (year: number, month: number) => void; // 년월 선택 콜백
 }

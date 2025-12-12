@@ -52,6 +52,9 @@ export function SimpleCalendar({
     showToday = true,
     showFooter: showFooterProp = true,
     autoApply = false,
+    // 년월만 선택
+    monthOnly = false,
+    onMonthSelect,
     // 시간 선택 관련
     showTimePicker = false,
     timeValue,
@@ -84,8 +87,13 @@ export function SimpleCalendar({
         if (selectedDate) return new Date(selectedDate);
         return new Date(today.getFullYear(), today.getMonth(), 1);
     });
-    const [viewMode, setViewMode] = useState<ViewMode>("calendar");
+    // monthOnly일 때는 바로 year 선택 뷰로 시작
+    const [viewMode, setViewMode] = useState<ViewMode>(
+        monthOnly ? "year" : "calendar"
+    );
     const [tempYear, setTempYear] = useState<number>(viewDate.getFullYear());
+    // monthOnly 모드에서 임시 월 상태 (autoApply가 false일 때 사용)
+    const [tempMonth, setTempMonth] = useState<number | null>(null);
     // 임시 선택 날짜 (확인 버튼 누르기 전까지 보관)
     const [tempSelectedDate, setTempSelectedDate] = useState<Date | null>(
         selectedDate
@@ -310,8 +318,27 @@ export function SimpleCalendar({
 
     // 월 선택
     const handleMonthSelect = (selectedMonth: number) => {
-        setViewDate(new Date(tempYear, selectedMonth, 1));
-        setViewMode("calendar");
+        if (monthOnly) {
+            if (autoApply) {
+                // autoApply가 true면 바로 적용하고 닫기
+                onMonthSelect?.(tempYear, selectedMonth);
+                onClose();
+            } else {
+                // autoApply가 false면 임시 저장만
+                setTempMonth(selectedMonth);
+            }
+        } else {
+            setViewDate(new Date(tempYear, selectedMonth, 1));
+            setViewMode("calendar");
+        }
+    };
+
+    // monthOnly 모드에서 확인 버튼 클릭
+    const handleMonthConfirm = () => {
+        if (tempMonth !== null) {
+            onMonthSelect?.(tempYear, tempMonth);
+        }
+        onClose();
     };
 
     // 연도 선택 뷰가 열릴 때 현재년도를 중앙에 위치
@@ -363,17 +390,52 @@ export function SimpleCalendar({
     // 헤더 렌더링 (viewMode에 따라 다름)
     const renderHeader = () => {
         if (viewMode === "year") {
+            // monthOnly 모드에서는 뒤로 갈 곳이 없으므로 < 버튼 숨김
+            if (monthOnly) {
+                return (
+                    <Typography variant="body2" fontWeight={600}>
+                        연도 선택
+                    </Typography>
+                );
+            }
+            // 일반 캘린더에서 년도 선택으로 왔을 때는 < 버튼 표시
             return (
-                <Typography variant="body2" fontWeight={600}>
-                    연도 선택
-                </Typography>
+                <>
+                    <IconButton
+                        size="small"
+                        onClick={() => setViewMode("calendar")}
+                    >
+                        <ChevronLeft />
+                    </IconButton>
+                    <Typography
+                        variant="body2"
+                        fontWeight={600}
+                        sx={{ flex: 1, textAlign: "center" }}
+                    >
+                        연도 선택
+                    </Typography>
+                    <Box sx={{ width: 28 }} />
+                </>
             );
         }
         if (viewMode === "month") {
             return (
-                <Typography variant="body2" fontWeight={600}>
-                    {tempYear}년 - 월 선택
-                </Typography>
+                <>
+                    <IconButton
+                        size="small"
+                        onClick={() => setViewMode("year")}
+                    >
+                        <ChevronLeft />
+                    </IconButton>
+                    <Typography
+                        variant="body2"
+                        fontWeight={600}
+                        sx={{ flex: 1, textAlign: "center" }}
+                    >
+                        {tempYear}년 - 월 선택
+                    </Typography>
+                    <Box sx={{ width: 28 }} /> {/* 균형을 위한 빈 공간 */}
+                </>
             );
         }
         // calendar mode
@@ -499,8 +561,10 @@ export function SimpleCalendar({
                 >
                     {mergedLocale.months.map(
                         (monthName: string, index: number) => {
-                            const isSelected =
-                                tempYear === year && index === month;
+                            // monthOnly 모드에서는 tempMonth를, 그 외에는 현재 viewDate의 month를 기준으로 선택 표시
+                            const isSelected = monthOnly
+                                ? tempMonth === index
+                                : tempYear === year && index === month;
                             const isCurrent =
                                 tempYear === today.getFullYear() &&
                                 index === today.getMonth();
@@ -667,6 +731,31 @@ export function SimpleCalendar({
 
     // 푸터 렌더링 (viewMode에 따라 다름)
     const renderFooter = () => {
+        // monthOnly 모드일 때
+        if (monthOnly) {
+            if (autoApply) {
+                // autoApply가 true면 푸터 불필요
+                return null;
+            }
+            // autoApply가 false면 확인/취소 버튼 표시
+            return (
+                <>
+                    <Box sx={{ flex: 1 }} />
+                    <Button size="small" onClick={onClose}>
+                        {mergedLocale.cancel}
+                    </Button>
+                    <Button
+                        size="small"
+                        onClick={handleMonthConfirm}
+                        variant="contained"
+                        disabled={tempMonth === null}
+                    >
+                        {mergedLocale.confirm}
+                    </Button>
+                </>
+            );
+        }
+
         if (viewMode === "year") {
             return (
                 <Button size="small" onClick={() => setViewMode("calendar")}>
@@ -676,22 +765,13 @@ export function SimpleCalendar({
         }
         if (viewMode === "month") {
             return (
-                <>
-                    <Button
-                        size="small"
-                        onClick={() => setViewMode("year")}
-                        sx={{ px: 2 }}
-                    >
-                        연도 선택
-                    </Button>
-                    <Button
-                        size="small"
-                        onClick={() => setViewMode("calendar")}
-                        sx={{ px: 2 }}
-                    >
-                        {mergedLocale.cancel}
-                    </Button>
-                </>
+                <Button
+                    size="small"
+                    onClick={() => setViewMode("calendar")}
+                    sx={{ px: 2 }}
+                >
+                    {mergedLocale.cancel}
+                </Button>
             );
         }
         // calendar mode - autoApply면 닫기 버튼만 표시
@@ -731,8 +811,9 @@ export function SimpleCalendar({
                 </Button>
                 <Button
                     size="small"
-                    onClick={handleConfirm}
+                    onClick={handleMonthConfirm}
                     variant="contained"
+                    disabled={tempMonth === null}
                 >
                     {mergedLocale.confirm}
                 </Button>
@@ -743,8 +824,9 @@ export function SimpleCalendar({
     // 푸터 표시 여부 결정 (showFooterProp이 false면 무조건 숨김)
     const showFooter =
         showFooterProp &&
-        ((!(autoApply && !showToday) && viewMode === "calendar") ||
-            viewMode !== "calendar");
+        (monthOnly
+            ? !autoApply // monthOnly일 때는 autoApply가 false면 항상 표시 (year/month 뷰 모두)
+            : !(autoApply && !showToday) && viewMode === "calendar"); // calendar 뷰일 때만 표시, year/month 뷰는 푸터 숨김
 
     // 통합된 구조로 렌더링
     const calendarContent = (
