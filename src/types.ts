@@ -79,6 +79,8 @@ export interface SimpleCalendarProps {
     autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: false)
     monthOnly?: boolean; // 년월만 선택 (기본값: false)
     onMonthSelect?: (year: number, month: number) => void; // 년월 선택 콜백
+    yearOnly?: boolean; // 년도만 선택 (기본값: false)
+    onYearSelect?: (year: number) => void; // 년도 선택 콜백
     showTimePicker?: boolean; // 시간 선택 표시 여부
     timeValue?: TimeValue; // 시간 값
     onTimeChange?: (hour: number, minute: number, second?: number) => void; // 시간 변경 콜백
@@ -150,4 +152,6 @@ export interface PopupCalendarProps
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
     monthOnly?: boolean; // 년월만 선택 (기본값: false)
     onMonthSelect?: (year: number, month: number) => void; // 년월 선택 콜백
+    yearOnly?: boolean; // 년도만 선택 (기본값: false)
+    onYearSelect?: (year: number) => void; // 년도 선택 콜백
 }

@@ -7,6 +7,7 @@
     -   [시간 선택](#시간-선택)
     -   [날짜+시간 선택](#날짜시간-선택)
     -   [년월 선택](#년월-선택)
+    -   [년도 선택](#년도-선택)
 -   [고급 사용법](#고급-사용법)
     -   [날짜 범위 제한](#날짜-범위-제한)
     -   [시간 범위 제한](#시간-범위-제한)
@@ -192,6 +193,44 @@ function MonthPickerExample() {
                 mode="date"
                 monthOnly={true}
                 onMonthSelect={handleMonthSelect}
+            />
+        </>
+    );
+}
+```
+
+---
+
+### 년도 선택
+
+년도만 선택하는 예제입니다.
+
+```tsx
+import { useState, useRef } from "react";
+import { Button } from "@mui/material";
+import { PopupCalendar } from "@ehfuse/mui-popup-calendar";
+
+function YearPickerExample() {
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef<HTMLButtonElement>(null);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+    return (
+        <>
+            <Button
+                ref={anchorRef}
+                variant="outlined"
+                onClick={() => setOpen(true)}
+            >
+                {`${selectedYear}년`}
+            </Button>
+            <PopupCalendar
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={anchorRef}
+                mode="date"
+                yearOnly={true}
+                onYearSelect={(year) => setSelectedYear(year)}
             />
         </>
     );

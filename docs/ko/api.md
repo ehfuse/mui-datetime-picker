@@ -57,6 +57,8 @@ import { PopupCalendar } from "@ehfuse/mui-popup-calendar";
 | `texts`            | [`CalendarTexts`](#calendartexts)                         | -                | -    | 텍스트 부분 커스터마이징                |
 | `monthOnly`        | `boolean`                                                 | `false`          | -    | 년월만 선택 모드                        |
 | `onMonthSelect`    | `(year: number, month: number) => void`                   | -                | -    | 년월 선택 콜백                          |
+| `yearOnly`         | `boolean`                                                 | `false`          | -    | 년도만 선택 모드                        |
+| `onYearSelect`     | `(year: number) => void`                                  | -                | -    | 년도 선택 콜백                          |
 
 > **참고**: PopupCalendar는 MUI `PopoverProps`를 확장합니다. `anchorOrigin`, `transformOrigin`, `slotProps` 등 Popover의 모든 Props를 사용할 수 있습니다.
 
@@ -73,7 +75,7 @@ import { SimpleCalendar } from "@ehfuse/mui-popup-calendar";
 #### Props
 
 | Prop               | 타입                                                      | 기본값           | 필수 | 설명                      |
-| ------------------ | --------------------------------------------------------- | ---------------- | ---- | ------------------------- |
+| ------------------ | --------------------------------------------------------- | ---------------- | ---- | ------------------------- | --- | ---------- | --------- | ------- | --- | ---------------- |
 | `selectedDate`     | `Date \| null`                                            | -                | ✓    | 선택된 날짜               |
 | `onSelect`         | `(date: Date) => void`                                    | -                | ✓    | 날짜 선택 콜백            |
 | `onClose`          | `() => void`                                              | -                | ✓    | 닫기 콜백                 |
@@ -96,7 +98,8 @@ import { SimpleCalendar } from "@ehfuse/mui-popup-calendar";
 | `locale`           | [`LocaleProp`](#localeprop)                               | `"ko"`           | -    | 로케일 (문자열 또는 객체) |
 | `texts`            | [`CalendarTexts`](#calendartexts)                         | -                | -    | 텍스트 부분 커스터마이징  |
 | `monthOnly`        | `boolean`                                                 | `false`          | -    | 년월만 선택 모드          |
-| `onMonthSelect`    | `(year: number, month: number) => void`                   | -                | -    | 년월 선택 콜백            |
+| `onMonthSelect`    | `(year: number, month: number) => void`                   | -                | -    | 년월 선택 콜백            |     | `yearOnly` | `boolean` | `false` | -   | 년도만 선택 모드 |
+| `onYearSelect`     | `(year: number) => void`                                  | -                | -    | 년도 선택 콜백            |
 
 ---
 

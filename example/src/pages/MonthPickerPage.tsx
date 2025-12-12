@@ -12,16 +12,24 @@ import {
 import { PopupCalendar, SimpleCalendar } from "@ehfuse/mui-popup-calendar";
 
 export default function MonthPickerPage() {
-    const [open, setOpen] = useState(false);
-    const anchorRef = useRef<HTMLButtonElement>(null);
-
+    // 년월 선택 상태
+    const [monthOpen, setMonthOpen] = useState(false);
+    const monthAnchorRef = useRef<HTMLButtonElement>(null);
     const [selectedYear, setSelectedYear] = useState<number>(
         new Date().getFullYear()
     );
     const [selectedMonth, setSelectedMonth] = useState<number>(
         new Date().getMonth()
     );
-    const [autoApply, setAutoApply] = useState(false);
+    const [monthAutoApply, setMonthAutoApply] = useState(false);
+
+    // 년도만 선택 상태
+    const [yearOpen, setYearOpen] = useState(false);
+    const yearAnchorRef = useRef<HTMLButtonElement>(null);
+    const [selectedYearOnly, setSelectedYearOnly] = useState<number>(
+        new Date().getFullYear()
+    );
+    const [yearAutoApply, setYearAutoApply] = useState(false);
 
     const handleMonthSelect = (year: number, month: number) => {
         setSelectedYear(year);
@@ -29,8 +37,9 @@ export default function MonthPickerPage() {
         console.log("Month selected:", year, month + 1);
     };
 
-    const getDisplayText = () => {
-        return `${selectedYear}년 ${selectedMonth + 1}월`;
+    const handleYearSelect = (year: number) => {
+        setSelectedYearOnly(year);
+        console.log("Year selected:", year);
     };
 
     const monthNames = [
@@ -51,43 +60,55 @@ export default function MonthPickerPage() {
     return (
         <Box>
             <Typography variant="h4" gutterBottom>
-                년월 선택 (Month Picker)
+                년월/년도 선택
             </Typography>
             <Typography variant="body1" paragraph>
-                monthOnly 속성을 사용하여 년월만 선택할 수 있는 캘린더입니다.
-                날짜 선택 없이 년도와 월만 선택하고 싶을 때 유용합니다.
+                monthOnly 속성으로 년월만, yearOnly 속성으로 년도만 선택할 수
+                있습니다.
             </Typography>
 
             <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-                {/* 데모 영역 */}
+                {/* 년월 선택 데모 */}
                 <Paper sx={{ p: 3, minWidth: 300 }}>
                     <Typography variant="h6" gutterBottom>
-                        PopupCalendar 데모
+                        년월 선택 (monthOnly)
                     </Typography>
 
                     <Button
-                        ref={anchorRef}
+                        ref={monthAnchorRef}
                         variant="contained"
-                        onClick={() => setOpen(true)}
+                        onClick={() => setMonthOpen(true)}
                         sx={{ minWidth: 200, mb: 2 }}
                     >
-                        {getDisplayText()}
+                        {`${selectedYear}년 ${selectedMonth + 1}월`}
                     </Button>
 
                     <PopupCalendar
-                        open={open}
-                        onClose={() => setOpen(false)}
-                        anchorEl={anchorRef}
+                        open={monthOpen}
+                        onClose={() => setMonthOpen(false)}
+                        anchorEl={monthAnchorRef}
                         mode="date"
                         monthOnly={true}
                         onMonthSelect={handleMonthSelect}
-                        autoApply={autoApply}
+                        autoApply={monthAutoApply}
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={monthAutoApply}
+                                onChange={(e) =>
+                                    setMonthAutoApply(e.target.checked)
+                                }
+                            />
+                        }
+                        label="autoApply"
                     />
 
                     <Divider sx={{ my: 2 }} />
 
                     <Typography variant="subtitle2" gutterBottom>
-                        SimpleCalendar 데모 (인라인)
+                        인라인 데모
                     </Typography>
 
                     <Box
@@ -119,17 +140,38 @@ export default function MonthPickerPage() {
                     </Box>
                 </Paper>
 
-                {/* 컨트롤 패널 */}
+                {/* 년도만 선택 데모 */}
                 <Paper sx={{ p: 3, minWidth: 300 }}>
                     <Typography variant="h6" gutterBottom>
-                        옵션
+                        년도 선택 (yearOnly)
                     </Typography>
+
+                    <Button
+                        ref={yearAnchorRef}
+                        variant="contained"
+                        onClick={() => setYearOpen(true)}
+                        sx={{ minWidth: 200, mb: 2 }}
+                    >
+                        {`${selectedYearOnly}년`}
+                    </Button>
+
+                    <PopupCalendar
+                        open={yearOpen}
+                        onClose={() => setYearOpen(false)}
+                        anchorEl={yearAnchorRef}
+                        mode="date"
+                        yearOnly={true}
+                        onYearSelect={handleYearSelect}
+                        autoApply={yearAutoApply}
+                    />
 
                     <FormControlLabel
                         control={
                             <Switch
-                                checked={autoApply}
-                                onChange={(e) => setAutoApply(e.target.checked)}
+                                checked={yearAutoApply}
+                                onChange={(e) =>
+                                    setYearAutoApply(e.target.checked)
+                                }
                             />
                         }
                         label="autoApply"
@@ -138,25 +180,31 @@ export default function MonthPickerPage() {
                     <Divider sx={{ my: 2 }} />
 
                     <Typography variant="subtitle2" gutterBottom>
-                        선택된 값
+                        인라인 데모
                     </Typography>
 
-                    <TextField
-                        label="년도"
-                        value={selectedYear}
-                        size="small"
-                        fullWidth
-                        InputProps={{ readOnly: true }}
-                        sx={{ mb: 1 }}
-                    />
-
-                    <TextField
-                        label="월"
-                        value={`${selectedMonth + 1}월`}
-                        size="small"
-                        fullWidth
-                        InputProps={{ readOnly: true }}
-                    />
+                    <Box
+                        sx={{
+                            width: 270,
+                            height: 300,
+                            border: "1px solid",
+                            borderColor: "divider",
+                            borderRadius: 2,
+                        }}
+                    >
+                        <SimpleCalendar
+                            selectedDate={null}
+                            onSelect={() => {}}
+                            onClose={() => {}}
+                            yearOnly={true}
+                            onYearSelect={(year) => {
+                                console.log("Inline year selected:", year);
+                                setSelectedYearOnly(year);
+                            }}
+                            showFooter={false}
+                            autoApply={true}
+                        />
+                    </Box>
                 </Paper>
             </Box>
 
@@ -175,23 +223,29 @@ export default function MonthPickerPage() {
                         fontSize: "0.875rem",
                     }}
                 >
-                    {`import { PopupCalendar } from '@ehfuse/mui-popup-calendar'
-
-const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-
-const handleMonthSelect = (year: number, month: number) => {
-  setSelectedYear(year);
-  setSelectedMonth(month);
-};
-
+                    {`// 년월 선택
 <PopupCalendar
   open={open}
   onClose={() => setOpen(false)}
   anchorEl={anchorRef}
   mode="date"
   monthOnly={true}
-  onMonthSelect={handleMonthSelect}
+  onMonthSelect={(year, month) => {
+    setSelectedYear(year);
+    setSelectedMonth(month);
+  }}
+/>
+
+// 년도만 선택
+<PopupCalendar
+  open={open}
+  onClose={() => setOpen(false)}
+  anchorEl={anchorRef}
+  mode="date"
+  yearOnly={true}
+  onYearSelect={(year) => {
+    setSelectedYear(year);
+  }}
 />`}
                 </Box>
             </Paper>

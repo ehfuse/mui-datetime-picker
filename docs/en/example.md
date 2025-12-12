@@ -7,6 +7,7 @@
     -   [Time Selection](#time-selection)
     -   [Date + Time Selection](#date--time-selection)
     -   [Month Selection](#month-selection)
+    -   [Year Selection](#year-selection)
 -   [Advanced Usage](#advanced-usage)
     -   [Date Range Restriction](#date-range-restriction)
     -   [Time Range Restriction](#time-range-restriction)
@@ -192,6 +193,44 @@ function MonthPickerExample() {
                 mode="date"
                 monthOnly={true}
                 onMonthSelect={handleMonthSelect}
+            />
+        </>
+    );
+}
+```
+
+---
+
+### Year Selection
+
+Example for selecting year only.
+
+```tsx
+import { useState, useRef } from "react";
+import { Button } from "@mui/material";
+import { PopupCalendar } from "@ehfuse/mui-popup-calendar";
+
+function YearPickerExample() {
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef<HTMLButtonElement>(null);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+    return (
+        <>
+            <Button
+                ref={anchorRef}
+                variant="outlined"
+                onClick={() => setOpen(true)}
+            >
+                {selectedYear}
+            </Button>
+            <PopupCalendar
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={anchorRef}
+                mode="date"
+                yearOnly={true}
+                onYearSelect={(year) => setSelectedYear(year)}
             />
         </>
     );

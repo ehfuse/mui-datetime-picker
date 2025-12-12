@@ -65,6 +65,9 @@ export function PopupCalendar({
     // 년월만 선택
     monthOnly = false,
     onMonthSelect,
+    // 년도만 선택
+    yearOnly = false,
+    onYearSelect,
     ...popoverProps
 }: PopupCalendarProps) {
     const hasSeconds = timeFormat === "HH:mm:ss" || timeFormat === "hh:mm:ss";
@@ -233,6 +236,8 @@ export function PopupCalendar({
                 texts={texts}
                 monthOnly={monthOnly}
                 onMonthSelect={onMonthSelect}
+                yearOnly={yearOnly}
+                onYearSelect={onYearSelect}
             />
         </Popover>
     );
