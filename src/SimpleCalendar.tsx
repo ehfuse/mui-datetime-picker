@@ -73,6 +73,12 @@ export function SimpleCalendar({
         [resolvedLocale, texts]
     );
 
+    // 유효하지 않은 Date 필터링
+    const validHolidays = useMemo(
+        () => holidays.filter((d) => d instanceof Date && !isNaN(d.getTime())),
+        [holidays]
+    );
+
     const today = new Date();
     const [viewDate, setViewDate] = useState(() => {
         if (selectedDate) return new Date(selectedDate);
@@ -601,7 +607,7 @@ export function SimpleCalendar({
                         const isDisabled = isDateDisabled(date);
                         const dayOfWeek = date.getDay();
                         const isCurrentMonth = date.getMonth() === month;
-                        const isHoliday = holidays.some((h) =>
+                        const isHoliday = validHolidays.some((h) =>
                             isSameDay(h, date)
                         );
 
