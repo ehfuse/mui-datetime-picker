@@ -12,6 +12,7 @@ import { Popover, PopoverProps } from "@mui/material";
 import { SimpleCalendar } from "./SimpleCalendar";
 import { TimePicker } from "./TimePicker";
 import { PopupCalendarProps, TimeValue, AnchorElType } from "./types";
+import { defaultLocale } from "./locale";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
 function resolveAnchorEl(
@@ -58,6 +59,9 @@ export function PopupCalendar({
     anchorOrigin = { vertical: "bottom", horizontal: "left" },
     transformOrigin = { vertical: "top", horizontal: "left" },
     slotProps,
+    // 로케일 관련
+    locale = defaultLocale,
+    texts,
     ...popoverProps
 }: PopupCalendarProps) {
     const hasSeconds = timeFormat === "HH:mm:ss" || timeFormat === "hh:mm:ss";
@@ -172,6 +176,8 @@ export function PopupCalendar({
                 secondStep={secondStep}
                 hideDisabledTime={hideDisabledTime}
                 autoApply={autoApply}
+                locale={locale}
+                texts={texts}
             />
         );
     }
@@ -220,6 +226,8 @@ export function PopupCalendar({
                 minuteStep={minuteStep}
                 secondStep={secondStep}
                 hideDisabledTime={hideDisabledTime}
+                locale={locale}
+                texts={texts}
             />
         </Popover>
     );

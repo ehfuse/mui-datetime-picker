@@ -18,7 +18,37 @@ export type {
     TimePickerProps,
     TimeSelectorProps,
     PopupCalendarProps,
+    CalendarLocale,
+    CalendarTexts,
+    LocaleKey,
+    LocaleProp,
 } from "./types";
+
+// Locales
+export {
+    defaultLocale,
+    locales,
+    resolveLocale,
+    koLocale,
+    enLocale,
+    jaLocale,
+    zhCNLocale,
+    zhTWLocale,
+    esLocale,
+    frLocale,
+    deLocale,
+    ptLocale,
+    ruLocale,
+    itLocale,
+    arLocale,
+    hiLocale,
+    viLocale,
+    thLocale,
+    idLocale,
+    nlLocale,
+    plLocale,
+    trLocale,
+} from "./locale";
 
 // Components
 export { SimpleCalendar } from "./SimpleCalendar";

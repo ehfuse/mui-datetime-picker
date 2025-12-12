@@ -6,10 +6,11 @@
  * @author 김영진 (ehfuse@gmail.com)
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Box, Popover, Button, PopoverProps } from "@mui/material";
 import { TimeSelector } from "./TimeSelector";
 import { TimePickerProps, AnchorElType } from "./types";
+import { resolveLocale } from "./locale";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
 function resolveAnchorEl(
@@ -36,8 +37,18 @@ export function TimePicker({
     secondStep = 1,
     hideDisabledTime = false,
     autoApply = false,
+    // 로케일 관련
+    locale,
+    texts,
 }: TimePickerProps) {
     const hasSeconds = format === "HH:mm:ss" || format === "hh:mm:ss";
+
+    // 로케일 해석 및 병합 (texts가 있으면 부분 덮어쓰기)
+    const resolvedLocale = resolveLocale(locale);
+    const mergedLocale = useMemo(
+        () => (texts ? { ...resolvedLocale, ...texts } : resolvedLocale),
+        [resolvedLocale, texts]
+    );
 
     // anchorEl 해석
     const resolvedAnchorEl = resolveAnchorEl(anchorEl);
@@ -169,7 +180,7 @@ export function TimePicker({
                         }}
                     >
                         <Button size="small" onClick={handleConfirm} fullWidth>
-                            확인
+                            {mergedLocale.confirm}
                         </Button>
                     </Box>
                 )}

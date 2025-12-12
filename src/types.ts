@@ -30,6 +30,41 @@ export interface TimeValue {
 /** 팝업 캘린더 모드 타입 */
 export type PopupCalendarMode = "date" | "time" | "datetime";
 
+// locale 관련 타입은 locale.ts에서 re-export
+export type {
+    CalendarLocale,
+    CalendarTexts,
+    LocaleKey,
+    LocaleProp,
+} from "./locale";
+
+import type { CalendarLocale, CalendarTexts, LocaleProp } from "./locale";
+
+export {
+    defaultLocale,
+    locales,
+    resolveLocale,
+    koLocale,
+    enLocale,
+    jaLocale,
+    zhCNLocale,
+    zhTWLocale,
+    esLocale,
+    frLocale,
+    deLocale,
+    ptLocale,
+    ruLocale,
+    itLocale,
+    arLocale,
+    hiLocale,
+    viLocale,
+    thLocale,
+    idLocale,
+    nlLocale,
+    plLocale,
+    trLocale,
+} from "./locale";
+
 /** SimpleCalendar 컴포넌트 Props */
 export interface SimpleCalendarProps {
     selectedDate: Date | null; // 선택된 날짜
@@ -51,6 +86,8 @@ export interface SimpleCalendarProps {
     minuteStep?: number; // 분 단위 간격 (기본값: 1)
     secondStep?: number; // 초 단위 간격 (기본값: 1)
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부
+    locale?: LocaleProp; // 로케일 (기본값: 'ko')
+    texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }
 
 /** TimePicker 컴포넌트 Props */
@@ -67,6 +104,8 @@ export interface TimePickerProps {
     secondStep?: number; // 초 단위 간격
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부
     autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: false)
+    locale?: LocaleProp; // 로케일 (기본값: 'ko')
+    texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }
 
 /** TimeSelector 컴포넌트 Props */
@@ -105,4 +144,6 @@ export interface PopupCalendarProps
     minuteStep?: number; // 분 단위 간격
     secondStep?: number; // 초 단위 간격
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부
+    locale?: LocaleProp; // 로케일 (기본값: 'ko')
+    texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }

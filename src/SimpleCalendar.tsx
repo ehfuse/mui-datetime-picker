@@ -20,26 +20,8 @@ import {
     OverlayScrollbarRef,
 } from "@ehfuse/overlay-scrollbar";
 import { TimeSelector } from "./TimeSelector";
-import { SimpleCalendarProps, ViewMode, TimeFormat } from "./types";
-
-// 요일 헤더
-const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
-
-// 월 이름
-const MONTHS = [
-    "1월",
-    "2월",
-    "3월",
-    "4월",
-    "5월",
-    "6월",
-    "7월",
-    "8월",
-    "9월",
-    "10월",
-    "11월",
-    "12월",
-];
+import { SimpleCalendarProps, ViewMode } from "./types";
+import { defaultLocale, resolveLocale } from "./locale";
 
 // 상수
 const HEADER_HEIGHT = 48;
@@ -80,7 +62,17 @@ export function SimpleCalendar({
     minuteStep = 1,
     secondStep = 1,
     hideDisabledTime = false,
+    // 로케일 관련
+    locale,
+    texts,
 }: SimpleCalendarProps) {
+    // 로케일 해석 및 병합 (texts가 있으면 부분 덮어쓰기)
+    const resolvedLocale = resolveLocale(locale);
+    const mergedLocale = useMemo(
+        () => (texts ? { ...resolvedLocale, ...texts } : resolvedLocale),
+        [resolvedLocale, texts]
+    );
+
     const today = new Date();
     const [viewDate, setViewDate] = useState(() => {
         if (selectedDate) return new Date(selectedDate);
@@ -399,7 +391,7 @@ export function SimpleCalendar({
                         transition: "background-color 0.15s",
                     }}
                 >
-                    {year}년 {MONTHS[month]}
+                    {year}년 {mergedLocale.months[month]}
                 </Typography>
                 <IconButton size="small" onClick={goToNextMonth}>
                     <ChevronRight />
@@ -499,46 +491,50 @@ export function SimpleCalendar({
                         boxSizing: "border-box",
                     }}
                 >
-                    {MONTHS.map((monthName, index) => {
-                        const isSelected = tempYear === year && index === month;
-                        const isCurrent =
-                            tempYear === today.getFullYear() &&
-                            index === today.getMonth();
-                        return (
-                            <Box
-                                key={monthName}
-                                onClick={() => handleMonthSelect(index)}
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    borderRadius: 1,
-                                    cursor: "pointer",
-                                    bgcolor: isSelected
-                                        ? selectedColor
-                                        : "transparent",
-                                    color: isSelected
-                                        ? "primary.contrastText"
-                                        : "text.primary",
-                                    border: isCurrent && !isSelected ? 1 : 0,
-                                    borderColor: selectedColor,
-                                    fontSize: "0.875rem",
-                                    fontWeight:
-                                        isSelected || isCurrent ? 600 : 400,
-                                    "&:hover": {
+                    {mergedLocale.months.map(
+                        (monthName: string, index: number) => {
+                            const isSelected =
+                                tempYear === year && index === month;
+                            const isCurrent =
+                                tempYear === today.getFullYear() &&
+                                index === today.getMonth();
+                            return (
+                                <Box
+                                    key={monthName}
+                                    onClick={() => handleMonthSelect(index)}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        borderRadius: 1,
+                                        cursor: "pointer",
                                         bgcolor: isSelected
                                             ? selectedColor
-                                            : "action.hover",
-                                        transform: "scale(1.05)",
-                                    },
-                                    transition:
-                                        "background-color 0.15s, transform 0.15s",
-                                }}
-                            >
-                                {monthName}
-                            </Box>
-                        );
-                    })}
+                                            : "transparent",
+                                        color: isSelected
+                                            ? "primary.contrastText"
+                                            : "text.primary",
+                                        border:
+                                            isCurrent && !isSelected ? 1 : 0,
+                                        borderColor: selectedColor,
+                                        fontSize: "0.875rem",
+                                        fontWeight:
+                                            isSelected || isCurrent ? 600 : 400,
+                                        "&:hover": {
+                                            bgcolor: isSelected
+                                                ? selectedColor
+                                                : "action.hover",
+                                            transform: "scale(1.05)",
+                                        },
+                                        transition:
+                                            "background-color 0.15s, transform 0.15s",
+                                    }}
+                                >
+                                    {monthName}
+                                </Box>
+                            );
+                        }
+                    )}
                 </Box>
             );
         }
@@ -566,7 +562,7 @@ export function SimpleCalendar({
                         mb: 0.5,
                     }}
                 >
-                    {WEEKDAYS.map((day, i) => (
+                    {mergedLocale.weekdays.map((day: string, i: number) => (
                         <Box
                             key={day}
                             sx={{
@@ -668,7 +664,7 @@ export function SimpleCalendar({
         if (viewMode === "year") {
             return (
                 <Button size="small" onClick={() => setViewMode("calendar")}>
-                    취소
+                    {mergedLocale.cancel}
                 </Button>
             );
         }
@@ -687,7 +683,7 @@ export function SimpleCalendar({
                         onClick={() => setViewMode("calendar")}
                         sx={{ px: 2 }}
                     >
-                        취소
+                        {mergedLocale.cancel}
                     </Button>
                 </>
             );
@@ -702,12 +698,12 @@ export function SimpleCalendar({
                             onClick={handleTodayClick}
                             disabled={isDateDisabled(today)}
                         >
-                            오늘
+                            {mergedLocale.today}
                         </Button>
                     )}
                     <Box sx={{ flex: 1 }} />
                     <Button size="small" onClick={onClose}>
-                        닫기
+                        {mergedLocale.close}
                     </Button>
                 </>
             );
@@ -720,19 +716,19 @@ export function SimpleCalendar({
                         onClick={handleTodayClick}
                         disabled={isDateDisabled(today)}
                     >
-                        오늘
+                        {mergedLocale.today}
                     </Button>
                 )}
                 <Box sx={{ flex: 1 }} />
                 <Button size="small" onClick={onClose}>
-                    취소
+                    {mergedLocale.cancel}
                 </Button>
                 <Button
                     size="small"
                     onClick={handleConfirm}
                     variant="contained"
                 >
-                    확인
+                    {mergedLocale.confirm}
                 </Button>
             </>
         );

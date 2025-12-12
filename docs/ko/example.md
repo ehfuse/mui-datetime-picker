@@ -13,6 +13,7 @@
     -   [autoApply 모드](#autoapply-모드)
     -   [푸터 숨기기](#푸터-숨기기)
     -   [인라인 캘린더](#인라인-캘린더)
+    -   [다국어 지원](#다국어-지원)
 
 ---
 
@@ -350,6 +351,133 @@ function InlineDateTimeExample() {
         </Box>
     );
 }
+```
+
+---
+
+### 다국어 지원
+
+다양한 언어로 캘린더를 표시할 수 있습니다.
+
+#### 문자열로 간단하게 설정 (권장)
+
+```tsx
+import { useState, useRef } from "react";
+import { Button } from "@mui/material";
+import { PopupCalendar } from "@ehfuse/mui-popup-calendar";
+
+function SimpleLocaleExample() {
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef<HTMLButtonElement>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
+    return (
+        <>
+            <Button
+                ref={anchorRef}
+                variant="outlined"
+                onClick={() => setOpen(true)}
+            >
+                {selectedDate?.toLocaleDateString() ?? "날짜 선택"}
+            </Button>
+            <PopupCalendar
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={anchorRef}
+                mode="date"
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                locale="en" // 간단하게 문자열로!
+            />
+        </>
+    );
+}
+```
+
+#### 동적 로케일 변경
+
+```tsx
+import { useState, useRef } from "react";
+import { Button, Stack } from "@mui/material";
+import { PopupCalendar, LocaleKey } from "@ehfuse/mui-popup-calendar";
+
+function DynamicLocaleExample() {
+    const [open, setOpen] = useState(false);
+    const [locale, setLocale] = useState<LocaleKey>("ko");
+    const anchorRef = useRef<HTMLButtonElement>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
+    return (
+        <>
+            <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+                <Button onClick={() => setLocale("en")}>English</Button>
+                <Button onClick={() => setLocale("ja")}>日本語</Button>
+                <Button onClick={() => setLocale("zhCN")}>中文</Button>
+                <Button onClick={() => setLocale("ko")}>한국어</Button>
+            </Stack>
+            <Button
+                ref={anchorRef}
+                variant="outlined"
+                onClick={() => setOpen(true)}
+            >
+                {selectedDate?.toLocaleDateString("ko-KR") ?? "날짜 선택"}
+            </Button>
+            <PopupCalendar
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={anchorRef}
+                mode="date"
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                locale={locale}
+            />
+        </>
+    );
+}
+```
+
+#### 일부 텍스트만 변경
+
+```tsx
+// 영어 로케일 기반으로 버튼 텍스트만 변경
+<PopupCalendar
+    open={open}
+    onClose={() => setOpen(false)}
+    anchorEl={anchorRef}
+    mode="date"
+    selectedDate={selectedDate}
+    onDateChange={setSelectedDate}
+    locale="en"
+    texts={{
+        confirm: "OK",
+        cancel: "Back",
+        today: "Now",
+    }}
+/>
+```
+
+#### 커스텀 로케일 생성
+
+```tsx
+import type { CalendarLocale } from "@ehfuse/mui-popup-calendar";
+
+// 완전 커스텀 로케일
+const myLocale: CalendarLocale = {
+    weekdays: ["일", "월", "화", "수", "목", "금", "토"],
+    months: [
+        "1월", "2월", "3월", "4월", "5월", "6월",
+        "7월", "8월", "9월", "10월", "11월", "12월"
+    ],
+    today: "오늘로",
+    confirm: "선택",
+    cancel: "돌아가기",
+    close: "닫기",
+};
+
+<PopupCalendar
+    locale={myLocale}
+    ...
+/>
 ```
 
 ---

@@ -13,6 +13,7 @@
     -   [autoApply Mode](#autoapply-mode)
     -   [Hide Footer](#hide-footer)
     -   [Inline Calendar](#inline-calendar)
+    -   [Internationalization (i18n)](#internationalization-i18n)
 
 ---
 
@@ -346,6 +347,133 @@ function InlineDateTimeExample() {
         </Box>
     );
 }
+```
+
+---
+
+### Internationalization (i18n)
+
+Display the calendar in various languages.
+
+#### Simple String Key (Recommended)
+
+```tsx
+import { useState, useRef } from "react";
+import { Button } from "@mui/material";
+import { PopupCalendar } from "@ehfuse/mui-popup-calendar";
+
+function SimpleLocaleExample() {
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef<HTMLButtonElement>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
+    return (
+        <>
+            <Button
+                ref={anchorRef}
+                variant="outlined"
+                onClick={() => setOpen(true)}
+            >
+                {selectedDate?.toLocaleDateString() ?? "Select Date"}
+            </Button>
+            <PopupCalendar
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={anchorRef}
+                mode="date"
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                locale="en" // Simple string key!
+            />
+        </>
+    );
+}
+```
+
+#### Dynamic Locale Switching
+
+```tsx
+import { useState, useRef } from "react";
+import { Button, Stack } from "@mui/material";
+import { PopupCalendar, LocaleKey } from "@ehfuse/mui-popup-calendar";
+
+function DynamicLocaleExample() {
+    const [open, setOpen] = useState(false);
+    const [locale, setLocale] = useState<LocaleKey>("en");
+    const anchorRef = useRef<HTMLButtonElement>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
+    return (
+        <>
+            <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+                <Button onClick={() => setLocale("en")}>English</Button>
+                <Button onClick={() => setLocale("ja")}>日本語</Button>
+                <Button onClick={() => setLocale("zhCN")}>中文</Button>
+                <Button onClick={() => setLocale("ko")}>한국어</Button>
+            </Stack>
+            <Button
+                ref={anchorRef}
+                variant="outlined"
+                onClick={() => setOpen(true)}
+            >
+                {selectedDate?.toLocaleDateString() ?? "Select Date"}
+            </Button>
+            <PopupCalendar
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={anchorRef}
+                mode="date"
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                locale={locale}
+            />
+        </>
+    );
+}
+```
+
+#### Partial Text Overrides
+
+```tsx
+// Override only button texts based on English locale
+<PopupCalendar
+    open={open}
+    onClose={() => setOpen(false)}
+    anchorEl={anchorRef}
+    mode="date"
+    selectedDate={selectedDate}
+    onDateChange={setSelectedDate}
+    locale="en"
+    texts={{
+        confirm: "OK",
+        cancel: "Back",
+        today: "Now",
+    }}
+/>
+```
+
+#### Creating Custom Locale
+
+```tsx
+import type { CalendarLocale } from "@ehfuse/mui-popup-calendar";
+
+// Fully custom locale
+const myLocale: CalendarLocale = {
+    weekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+    months: [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ],
+    today: "Go to Today",
+    confirm: "Select",
+    cancel: "Go Back",
+    close: "Close",
+};
+
+<PopupCalendar
+    locale={myLocale}
+    ...
+/>
 ```
 
 ---
