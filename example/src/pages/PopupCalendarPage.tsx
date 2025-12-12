@@ -150,6 +150,15 @@ export default function PopupCalendarPage() {
                             selectedDate={selectedDate}
                             onSelect={handleDateChange}
                             onClose={() => {}}
+                            onMonthChange={(year, month) => {
+                                console.log(
+                                    "Inline calendar month changed:",
+                                    year,
+                                    "년",
+                                    month,
+                                    "월"
+                                );
+                            }}
                             showTimePicker={false}
                             showFooter={false}
                             autoApply={true}

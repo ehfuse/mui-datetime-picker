@@ -252,12 +252,16 @@ export function SimpleCalendar({
         const newDate = new Date(year, month - 1, 1);
         setViewDate(newDate);
         setTempSelectedDate(null);
+        // 월 변경 콜백 호출
+        onMonthChange?.(newDate.getFullYear(), newDate.getMonth() + 1);
     };
 
     const goToNextMonth = () => {
         const newDate = new Date(year, month + 1, 1);
         setViewDate(newDate);
         setTempSelectedDate(null);
+        // 월 변경 콜백 호출
+        onMonthChange?.(newDate.getFullYear(), newDate.getMonth() + 1);
     };
 
     // 휠 이벤트로 이전/다음 달 이동
