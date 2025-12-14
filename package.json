@@ -1,6 +1,6 @@
 {
     "name": "@ehfuse/mui-datetime-picker",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "MUI based popup calendar and time picker components",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",
