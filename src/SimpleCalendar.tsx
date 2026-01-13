@@ -99,9 +99,9 @@ export function SimpleCalendar({
         if (selectedDate) return new Date(selectedDate);
         return new Date(today.getFullYear(), today.getMonth(), 1);
     });
-    // monthOnly 또는 yearOnly일 때는 바로 year 선택 뷰로 시작
+    // yearOnly일 때는 year 뷰로, monthOnly일 때는 month 뷰로 시작
     const [viewMode, setViewMode] = useState<ViewMode>(
-        monthOnly || yearOnly ? "year" : "calendar"
+        yearOnly ? "year" : monthOnly ? "month" : "calendar"
     );
     const [tempYear, setTempYear] = useState<number>(viewDate.getFullYear());
     // monthOnly 모드에서 임시 월 상태 (autoApply가 false일 때 사용)
