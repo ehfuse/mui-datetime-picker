@@ -15,12 +15,10 @@ import React, {
 } from "react";
 import { Box, Typography, IconButton, Button } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "./icons";
-import {
-    OverlayScrollbar,
-    OverlayScrollbarRef,
-} from "@ehfuse/overlay-scrollbar";
+import { OverlayScrollbar } from "@ehfuse/overlay-scrollbar";
+import type { OverlayScrollbarRef } from "@ehfuse/overlay-scrollbar";
 import { TimeSelector } from "./TimeSelector";
-import { SimpleCalendarProps, ViewMode } from "./types";
+import type { SimpleCalendarProps, ViewMode } from "./types";
 import { resolveLocale } from "./locale";
 import { getWeekInfo, isSameDay, isSameWeek } from "./utils";
 
@@ -85,13 +83,13 @@ export function SimpleCalendar({
     const resolvedLocale = resolveLocale(locale);
     const mergedLocale = useMemo(
         () => (texts ? { ...resolvedLocale, ...texts } : resolvedLocale),
-        [resolvedLocale, texts]
+        [resolvedLocale, texts],
     );
 
     // 유효하지 않은 Date 필터링
     const validHolidays = useMemo(
         () => holidays.filter((d) => d instanceof Date && !isNaN(d.getTime())),
-        [holidays]
+        [holidays],
     );
 
     const today = new Date();
@@ -101,18 +99,18 @@ export function SimpleCalendar({
     });
     // yearOnly일 때는 year 뷰로, monthOnly일 때는 month 뷰로 시작
     const [viewMode, setViewMode] = useState<ViewMode>(
-        yearOnly ? "year" : monthOnly ? "month" : "calendar"
+        yearOnly ? "year" : monthOnly ? "month" : "calendar",
     );
     const [tempYear, setTempYear] = useState<number>(viewDate.getFullYear());
     // monthOnly 모드에서 임시 월 상태 (autoApply가 false일 때 사용)
     const [tempMonth, setTempMonth] = useState<number | null>(null);
     // yearOnly 모드에서 임시 년도 상태 (autoApply가 false일 때 사용)
     const [tempSelectedYear, setTempSelectedYear] = useState<number | null>(
-        null
+        null,
     );
     // 임시 선택 날짜 (확인 버튼 누르기 전까지 보관)
     const [tempSelectedDate, setTempSelectedDate] = useState<Date | null>(
-        selectedDate
+        selectedDate,
     );
     // 임시 시간 (확인 버튼 누르기 전까지 보관)
     const [tempTime, setTempTime] = useState<{
@@ -186,14 +184,14 @@ export function SimpleCalendar({
         const dateOnly = new Date(
             date.getFullYear(),
             date.getMonth(),
-            date.getDate()
+            date.getDate(),
         );
 
         if (minDate) {
             const min = new Date(
                 minDate.getFullYear(),
                 minDate.getMonth(),
-                minDate.getDate()
+                minDate.getDate(),
             );
             if (dateOnly.getTime() < min.getTime()) return true;
         }
@@ -201,7 +199,7 @@ export function SimpleCalendar({
             const max = new Date(
                 maxDate.getFullYear(),
                 maxDate.getMonth(),
-                maxDate.getDate()
+                maxDate.getDate(),
             );
             if (dateOnly.getTime() > max.getTime()) return true;
         }
@@ -212,7 +210,7 @@ export function SimpleCalendar({
     const isTimeChanged = (
         hour: number,
         minute: number,
-        second?: number
+        second?: number,
     ): boolean => {
         if (!timeValue) return true;
         const hasSeconds =
@@ -275,7 +273,7 @@ export function SimpleCalendar({
                 goToPrevMonth();
             }
         },
-        [viewMode, year, month]
+        [viewMode, year, month],
     );
 
     const handleDateClick = (date: Date) => {
@@ -291,7 +289,7 @@ export function SimpleCalendar({
                         onWeekChange?.(
                             weekInfo.weekOfMonth,
                             weekInfo.startDate,
-                            weekInfo.endDate
+                            weekInfo.endDate,
                         );
                     }
                 }
@@ -302,7 +300,7 @@ export function SimpleCalendar({
                     isTimeChanged(
                         tempTime.hour,
                         tempTime.minute,
-                        tempTime.second
+                        tempTime.second,
                     )
                 ) {
                     const hasSeconds =
@@ -310,7 +308,7 @@ export function SimpleCalendar({
                     onTimeChange(
                         tempTime.hour,
                         tempTime.minute,
-                        hasSeconds ? tempTime.second : undefined
+                        hasSeconds ? tempTime.second : undefined,
                     );
                 }
             } else {
@@ -344,7 +342,7 @@ export function SimpleCalendar({
                     isTimeChanged(
                         tempTime.hour,
                         tempTime.minute,
-                        tempTime.second
+                        tempTime.second,
                     )
                 ) {
                     const hasSeconds =
@@ -352,7 +350,7 @@ export function SimpleCalendar({
                     onTimeChange(
                         tempTime.hour,
                         tempTime.minute,
-                        hasSeconds ? tempTime.second : undefined
+                        hasSeconds ? tempTime.second : undefined,
                     );
                 }
                 setViewDate(new Date(todayYear, todayMonth, 1));
@@ -374,7 +372,7 @@ export function SimpleCalendar({
                     onWeekChange?.(
                         weekInfo.weekOfMonth,
                         weekInfo.startDate,
-                        weekInfo.endDate
+                        weekInfo.endDate,
                     );
                 }
             }
@@ -390,7 +388,7 @@ export function SimpleCalendar({
             onTimeChange(
                 tempTime.hour,
                 tempTime.minute,
-                hasSeconds ? tempTime.second : undefined
+                hasSeconds ? tempTime.second : undefined,
             );
         }
         onClose();
@@ -400,7 +398,7 @@ export function SimpleCalendar({
     const handleTempTimeChange = (
         hour: number,
         minute: number,
-        second?: number
+        second?: number,
     ) => {
         setTempTime({
             hour,
@@ -520,10 +518,10 @@ export function SimpleCalendar({
 
                 // 실제 그리드 요소 찾기
                 const scrollContainer = contentRef.current.querySelector(
-                    ".overlay-scrollbar-content"
+                    ".overlay-scrollbar-content",
                 ) as HTMLElement;
                 const gridElement = scrollContainer?.querySelector(
-                    "[class*='MuiBox-root']"
+                    "[class*='MuiBox-root']",
                 ) as HTMLElement;
 
                 if (!gridElement) return;
@@ -775,7 +773,7 @@ export function SimpleCalendar({
                                     {monthName}
                                 </Box>
                             );
-                        }
+                        },
                     )}
                 </Box>
             );
@@ -817,8 +815,8 @@ export function SimpleCalendar({
                                     i === 0
                                         ? holidayColor
                                         : i === 6
-                                        ? saturdayColor
-                                        : "text.secondary",
+                                          ? saturdayColor
+                                          : "text.secondary",
                                 fontWeight: 500,
                             }}
                         >
@@ -847,7 +845,7 @@ export function SimpleCalendar({
                         const dayOfWeek = date.getDay();
                         const isCurrentMonth = date.getMonth() === month;
                         const isHoliday = validHolidays.some((h) =>
-                            isSameDay(h, date)
+                            isSameDay(h, date),
                         );
 
                         return (
@@ -871,14 +869,14 @@ export function SimpleCalendar({
                                     color: isDisabled
                                         ? "text.disabled"
                                         : isSelected
-                                        ? "primary.contrastText"
-                                        : !isCurrentMonth
-                                        ? "text.disabled"
-                                        : isHoliday || dayOfWeek === 0
-                                        ? holidayColor
-                                        : dayOfWeek === 6
-                                        ? saturdayColor
-                                        : "text.primary",
+                                          ? "primary.contrastText"
+                                          : !isCurrentMonth
+                                            ? "text.disabled"
+                                            : isHoliday || dayOfWeek === 0
+                                              ? holidayColor
+                                              : dayOfWeek === 6
+                                                ? saturdayColor
+                                                : "text.primary",
                                     opacity: isCurrentMonth ? 1 : 0.4,
                                     border: isToday ? 1 : 0,
                                     borderColor: todayBorderColor,
@@ -886,8 +884,8 @@ export function SimpleCalendar({
                                         bgcolor: isDisabled
                                             ? "transparent"
                                             : isSelected
-                                            ? selectedColor
-                                            : "action.hover",
+                                              ? selectedColor
+                                              : "action.hover",
                                     },
                                     transition: "background-color 0.15s",
                                     fontSize: "0.75rem",
@@ -1027,8 +1025,8 @@ export function SimpleCalendar({
         (yearOnly
             ? !autoApply // yearOnly일 때는 autoApply가 false면 항상 표시
             : monthOnly
-            ? !autoApply // monthOnly일 때는 autoApply가 false면 항상 표시 (year/month 뷰 모두)
-            : !(autoApply && !showToday) && viewMode === "calendar"); // calendar 뷰일 때만 표시, year/month 뷰는 푸터 숨김
+              ? !autoApply // monthOnly일 때는 autoApply가 false면 항상 표시 (year/month 뷰 모두)
+              : !(autoApply && !showToday) && viewMode === "calendar"); // calendar 뷰일 때만 표시, year/month 뷰는 푸터 숨김
 
     // 통합된 구조로 렌더링
     const calendarContent = (

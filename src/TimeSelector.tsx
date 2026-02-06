@@ -9,12 +9,10 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Box, Typography } from "@mui/material";
-import {
-    OverlayScrollbar,
-    OverlayScrollbarRef,
-} from "@ehfuse/overlay-scrollbar";
+import { OverlayScrollbar } from "@ehfuse/overlay-scrollbar";
+import type { OverlayScrollbarRef } from "@ehfuse/overlay-scrollbar";
 import { ColonIcon } from "./icons";
-import { TimeSelectorProps } from "./types";
+import type { TimeSelectorProps } from "./types";
 
 export function TimeSelector({
     value,
@@ -56,16 +54,16 @@ export function TimeSelector({
     // 시간 배열 생성
     const hours = Array.from(
         { length: maxHour - minHourValue + 1 },
-        (_, i) => minHourValue + i
+        (_, i) => minHourValue + i,
     );
     const minutes = Array.from(
         { length: Math.ceil(60 / minuteStep) },
-        (_, i) => i * minuteStep
+        (_, i) => i * minuteStep,
     );
     const seconds = hasSeconds
         ? Array.from(
               { length: Math.ceil(60 / secondStep) },
-              (_, i) => i * secondStep
+              (_, i) => i * secondStep,
           )
         : [];
 
@@ -73,7 +71,7 @@ export function TimeSelector({
     const scrollToCenter = useCallback(
         (
             scrollbarRef: React.RefObject<OverlayScrollbarRef | null>,
-            val: number
+            val: number,
         ) => {
             if (!scrollbarRef.current) return;
 
@@ -81,7 +79,7 @@ export function TimeSelector({
             if (!scrollContainer) return;
 
             const element = scrollContainer.querySelector(
-                `[data-value="${val}"]`
+                `[data-value="${val}"]`,
             ) as HTMLElement;
             if (!element) return;
 
@@ -93,7 +91,7 @@ export function TimeSelector({
                 elementTop - containerHeight / 2 + elementHeight / 2;
             scrollbarRef.current.scrollTo({ top: Math.max(0, scrollTop) });
         },
-        []
+        [],
     );
 
     // 초기 스크롤 (한 번만)
@@ -150,7 +148,7 @@ export function TimeSelector({
         onChange(
             hour,
             selectedMinute ?? 0,
-            hasSeconds ? selectedSecond ?? 0 : undefined
+            hasSeconds ? (selectedSecond ?? 0) : undefined,
         );
     };
 
@@ -159,7 +157,7 @@ export function TimeSelector({
         onChange(
             selectedHour ?? 0,
             minute,
-            hasSeconds ? selectedSecond ?? 0 : undefined
+            hasSeconds ? (selectedSecond ?? 0) : undefined,
         );
     };
 
@@ -173,7 +171,7 @@ export function TimeSelector({
         val: number,
         selected: boolean,
         disabled: boolean,
-        onClick: () => void
+        onClick: () => void,
     ) => (
         <Box
             key={val}
@@ -189,16 +187,16 @@ export function TimeSelector({
                 color: disabled
                     ? "text.disabled"
                     : selected
-                    ? "primary.contrastText"
-                    : "text.primary",
+                      ? "primary.contrastText"
+                      : "text.primary",
                 opacity: disabled ? 0.4 : 1,
                 transition: "background-color 0.15s, color 0.15s",
                 "&:hover": {
                     backgroundColor: disabled
                         ? "transparent"
                         : selected
-                        ? "primary.dark"
-                        : "action.hover",
+                          ? "primary.dark"
+                          : "action.hover",
                 },
                 fontVariantNumeric: "tabular-nums",
                 minWidth: 32,
@@ -219,7 +217,7 @@ export function TimeSelector({
         items: number[],
         selectedValue: number | null,
         onSelect: (val: number) => void,
-        checkDisabled: (val: number) => boolean
+        checkDisabled: (val: number) => boolean,
     ) => (
         <OverlayScrollbar
             ref={ref as React.RefObject<OverlayScrollbarRef>}
@@ -236,7 +234,7 @@ export function TimeSelector({
                         item,
                         selectedValue === item,
                         isDisabled,
-                        () => onSelect(item)
+                        () => onSelect(item),
                     );
                 })}
             </div>
@@ -370,7 +368,7 @@ export function TimeSelector({
                     hours,
                     selectedHour,
                     handleHourSelect,
-                    isHourDisabled
+                    isHourDisabled,
                 )}
 
                 <Box
@@ -385,7 +383,7 @@ export function TimeSelector({
                     minutes,
                     selectedMinute,
                     handleMinuteSelect,
-                    isMinuteDisabled
+                    isMinuteDisabled,
                 )}
 
                 {hasSeconds && (
@@ -402,7 +400,7 @@ export function TimeSelector({
                             seconds,
                             selectedSecond,
                             handleSecondSelect,
-                            isSecondDisabled
+                            isSecondDisabled,
                         )}
                     </>
                 )}

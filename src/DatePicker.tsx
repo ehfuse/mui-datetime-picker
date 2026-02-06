@@ -8,14 +8,16 @@
  */
 
 import { useState, useEffect } from "react";
-import { Popover, PopoverProps } from "@mui/material";
+import { Popover } from "@mui/material";
+import type { PopoverProps } from "@mui/material/Popover";
+import type { SxProps, Theme } from "@mui/material/styles";
 import { SimpleCalendar } from "./SimpleCalendar";
-import { DatePickerProps, AnchorElType } from "./types";
+import type { DatePickerProps, AnchorElType } from "./types";
 import { defaultLocale } from "./locale";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
 function resolveAnchorEl(
-    anchorEl: AnchorElType | undefined
+    anchorEl: AnchorElType | undefined,
 ): PopoverProps["anchorEl"] {
     if (!anchorEl) return null;
     // RefObject인 경우 current 반환
@@ -60,6 +62,22 @@ export function DatePicker({
     onWeekChange,
     ...popoverProps
 }: DatePickerProps) {
+    const mergedPaperProps = {
+        ...slotProps?.paper,
+        "data-custom-date-picker-popper": "true",
+        tabIndex: -1,
+        sx: {
+            mt: 1,
+            borderRadius: 2,
+            boxShadow: 3,
+            width: 300,
+            height: showFooter ? 380 : 332,
+            overflow: "hidden",
+            userSelect: "none",
+            ...((slotProps?.paper as { sx?: SxProps<Theme> })?.sx ?? {}),
+        },
+    } as unknown as NonNullable<PopoverProps["slotProps"]>["paper"];
+
     // anchorEl 해석
     const resolvedAnchorEl = resolveAnchorEl(anchorEl);
 
@@ -111,19 +129,7 @@ export function DatePicker({
             {...popoverProps}
             slotProps={{
                 ...slotProps,
-                paper: {
-                    ...slotProps?.paper,
-                    sx: {
-                        mt: 1,
-                        borderRadius: 2,
-                        boxShadow: 3,
-                        width: 300,
-                        height: showFooter ? 380 : 332,
-                        overflow: "hidden",
-                        userSelect: "none",
-                        ...(slotProps?.paper as any)?.sx,
-                    },
-                },
+                paper: mergedPaperProps,
             }}
         >
             <SimpleCalendar

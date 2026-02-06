@@ -8,14 +8,16 @@
  */
 
 import { useState, useEffect } from "react";
-import { Popover, PopoverProps } from "@mui/material";
+import { Popover } from "@mui/material";
+import type { PopoverProps } from "@mui/material/Popover";
+import type { SxProps, Theme } from "@mui/material/styles";
 import { SimpleCalendar } from "./SimpleCalendar";
-import { DateTimePickerProps, TimeValue, AnchorElType } from "./types";
+import type { DateTimePickerProps, TimeValue, AnchorElType } from "./types";
 import { defaultLocale } from "./locale";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
 function resolveAnchorEl(
-    anchorEl: AnchorElType | undefined
+    anchorEl: AnchorElType | undefined,
 ): PopoverProps["anchorEl"] {
     if (!anchorEl) return null;
     // RefObject인 경우 current 반환
@@ -79,11 +81,11 @@ export function DateTimePicker({
         return {
             hour: String(now.getHours()).padStart(2, "0"),
             minute: String(
-                Math.floor(now.getMinutes() / minuteStep) * minuteStep
+                Math.floor(now.getMinutes() / minuteStep) * minuteStep,
             ).padStart(2, "0"),
             second: hasSeconds
                 ? String(
-                      Math.floor(now.getSeconds() / secondStep) * secondStep
+                      Math.floor(now.getSeconds() / secondStep) * secondStep,
                   ).padStart(2, "0")
                 : undefined,
         };
@@ -100,12 +102,12 @@ export function DateTimePicker({
                 setTempTime({
                     hour: String(now.getHours()).padStart(2, "0"),
                     minute: String(
-                        Math.floor(now.getMinutes() / minuteStep) * minuteStep
+                        Math.floor(now.getMinutes() / minuteStep) * minuteStep,
                     ).padStart(2, "0"),
                     second: hasSeconds
                         ? String(
                               Math.floor(now.getSeconds() / secondStep) *
-                                  secondStep
+                                  secondStep,
                           ).padStart(2, "0")
                         : undefined,
                 });
@@ -138,7 +140,7 @@ export function DateTimePicker({
     const handleCalendarTimeChange = (
         hour: number,
         minute: number,
-        second?: number
+        second?: number,
     ) => {
         const newTime = {
             hour: String(hour).padStart(2, "0"),
@@ -178,7 +180,8 @@ export function DateTimePicker({
                         height,
                         overflow: "hidden",
                         userSelect: "none",
-                        ...(slotProps?.paper as any)?.sx,
+                        ...((slotProps?.paper as { sx?: SxProps<Theme> })?.sx ??
+                            {}),
                     },
                 },
             }}

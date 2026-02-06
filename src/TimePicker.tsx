@@ -7,14 +7,15 @@
  */
 
 import { useState, useEffect, useMemo } from "react";
-import { Box, Popover, Button, PopoverProps } from "@mui/material";
+import { Box, Popover, Button } from "@mui/material";
+import type { PopoverProps } from "@mui/material/Popover";
 import { TimeSelector } from "./TimeSelector";
-import { TimePickerProps, AnchorElType } from "./types";
+import type { TimePickerProps, AnchorElType } from "./types";
 import { resolveLocale } from "./locale";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
 function resolveAnchorEl(
-    anchorEl: AnchorElType | undefined
+    anchorEl: AnchorElType | undefined,
 ): PopoverProps["anchorEl"] {
     if (!anchorEl) return null;
     // RefObject인 경우 current 반환
@@ -47,7 +48,7 @@ export function TimePicker({
     const resolvedLocale = resolveLocale(locale);
     const mergedLocale = useMemo(
         () => (texts ? { ...resolvedLocale, ...texts } : resolvedLocale),
-        [resolvedLocale, texts]
+        [resolvedLocale, texts],
     );
 
     // anchorEl 해석
@@ -70,13 +71,13 @@ export function TimePicker({
             setTempMinute(
                 isNaN(m)
                     ? Math.floor(now.getMinutes() / minuteStep) * minuteStep
-                    : Math.floor(m / minuteStep) * minuteStep
+                    : Math.floor(m / minuteStep) * minuteStep,
             );
             if (hasSeconds) {
                 setTempSecond(
                     isNaN(s)
                         ? Math.floor(now.getSeconds() / secondStep) * secondStep
-                        : Math.floor(s / secondStep) * secondStep
+                        : Math.floor(s / secondStep) * secondStep,
                 );
             }
         }
@@ -86,7 +87,7 @@ export function TimePicker({
     const handleTimeChange = (
         hour: number,
         minute: number,
-        second?: number
+        second?: number,
     ) => {
         setTempHour(hour);
         setTempMinute(minute);
