@@ -1,6 +1,6 @@
 {
     "name": "@ehfuse/mui-datetime-picker",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "MUI based popup calendar and time picker components",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",
@@ -38,7 +38,7 @@
         "@ehfuse/overlay-scrollbar": ">=1.0.0",
         "@emotion/react": ">=11.0.0",
         "@emotion/styled": ">=11.0.0",
-        "@mui/material": ">=5.0.0",
+        "@mui/material": ">=7.0.0",
         "react": ">=19.0.0",
         "react-dom": ">=19.0.0"
     },
