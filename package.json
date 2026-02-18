@@ -1,6 +1,6 @@
 {
     "name": "@ehfuse/mui-datetime-picker",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "MUI based popup calendar and time picker components",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",
@@ -30,6 +30,9 @@
     ],
     "author": "김영진 (ehfuse@gmail.com)",
     "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/ehfuse/mui-datetime-picker.git"
