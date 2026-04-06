@@ -14,6 +14,7 @@ import type { SxProps, Theme } from "@mui/material/styles";
 import { SimpleCalendar } from "./SimpleCalendar";
 import type { DateTimePickerProps, TimeValue, AnchorElType } from "./types";
 import { defaultLocale } from "./locale";
+import { resolveFooterAndAutoApply } from "./utils";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
 function resolveAnchorEl(
@@ -47,7 +48,7 @@ export function DateTimePicker({
     styles,
     showToday = true,
     showFooter = true,
-    autoApply = false,
+    autoApply = true,
     timeFormat = "HH:mm",
     minTime,
     maxTime,
@@ -66,6 +67,9 @@ export function DateTimePicker({
     onWeekChange,
     ...popoverProps
 }: DateTimePickerProps) {
+    const { showFooter: footerOn, autoApply: applyImmediate } =
+        resolveFooterAndAutoApply(showFooter, autoApply);
+
     const hasSeconds = timeFormat === "HH:mm:ss" || timeFormat === "hh:mm:ss";
 
     // anchorEl 해석
@@ -158,7 +162,7 @@ export function DateTimePicker({
 
     // 팝오버 크기 결정 (datetime 전용)
     const width = 300 + (hasSeconds ? 165 : 110);
-    const height = showFooter ? 380 : 332;
+    const height = footerOn ? 380 : 332;
 
     return (
         <Popover
@@ -195,8 +199,8 @@ export function DateTimePicker({
                 holidays={holidays}
                 styles={styles}
                 showToday={showToday}
-                showFooter={showFooter}
-                autoApply={autoApply}
+                showFooter={footerOn}
+                autoApply={applyImmediate}
                 showTimePicker={true}
                 timeValue={tempTime}
                 onTimeChange={handleCalendarTimeChange}

@@ -50,7 +50,7 @@ export function SimpleCalendar({
     onClose,
     showToday = true,
     showFooter: showFooterProp = true,
-    autoApply = false,
+    autoApply = true,
     // 년월만 선택
     monthOnly = false,
     // 년도만 선택

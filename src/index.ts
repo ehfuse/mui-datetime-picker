@@ -27,7 +27,12 @@ export type {
 
 // Utils
 export type { WeekInfo } from "./utils";
-export { getWeekInfo, isSameDay, isSameWeek } from "./utils";
+export {
+    getWeekInfo,
+    isSameDay,
+    isSameWeek,
+    resolveFooterAndAutoApply,
+} from "./utils";
 
 // Locales
 export {

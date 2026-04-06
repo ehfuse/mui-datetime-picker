@@ -79,7 +79,7 @@ export interface SimpleCalendarProps {
     onClose: () => void; // 닫기 콜백
     showToday?: boolean; // 오늘 버튼 표시 여부
     showFooter?: boolean; // 푸터 표시 여부 (기본값: true)
-    autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: false)
+    autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: true). 푸터 없음과 동시에 false면 내부적으로 true로 보정됨
     monthOnly?: boolean; // 년월만 선택 (기본값: false)
     yearOnly?: boolean; // 년도만 선택 (기본값: false)
     onMonthChange?: (year: number, month: number) => void; // 년월 변경 콜백
@@ -153,7 +153,7 @@ export interface DatePickerProps
     styles?: CalendarStyles; // 스타일 옵션
     showToday?: boolean; // 오늘 버튼 표시 여부
     showFooter?: boolean; // 푸터 표시 여부 (기본값: true)
-    autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: false)
+    autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: true). 푸터 없음과 동시에 false면 내부적으로 true로 보정됨
     locale?: LocaleProp; // 로케일 (기본값: 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
     monthOnly?: boolean; // 년월만 선택 (기본값: false)
@@ -182,7 +182,7 @@ export interface DateTimePickerProps
     styles?: CalendarStyles; // 스타일 옵션
     showToday?: boolean; // 오늘 버튼 표시 여부
     showFooter?: boolean; // 푸터 표시 여부 (기본값: true)
-    autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: false)
+    autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: true). 푸터 없음과 동시에 false면 내부적으로 true로 보정됨
     timeFormat?: TimeFormat; // 시간 포맷
     minTime?: string; // 선택 가능한 최소 시간
     maxTime?: string; // 선택 가능한 최대 시간

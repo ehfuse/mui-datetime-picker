@@ -14,6 +14,7 @@ import type { SxProps, Theme } from "@mui/material/styles";
 import { SimpleCalendar } from "./SimpleCalendar";
 import type { DatePickerProps, AnchorElType } from "./types";
 import { defaultLocale } from "./locale";
+import { resolveFooterAndAutoApply } from "./utils";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
 function resolveAnchorEl(
@@ -45,7 +46,7 @@ export function DatePicker({
     styles,
     showToday = true,
     showFooter = true,
-    autoApply = false,
+    autoApply = true,
     anchorOrigin = { vertical: "bottom", horizontal: "left" },
     transformOrigin = { vertical: "top", horizontal: "left" },
     slotProps,
@@ -62,6 +63,9 @@ export function DatePicker({
     onWeekChange,
     ...popoverProps
 }: DatePickerProps) {
+    const { showFooter: footerOn, autoApply: applyImmediate } =
+        resolveFooterAndAutoApply(showFooter, autoApply);
+
     const mergedPaperProps = {
         ...slotProps?.paper,
         "data-custom-date-picker-popper": "true",
@@ -71,7 +75,7 @@ export function DatePicker({
             borderRadius: 2,
             boxShadow: 3,
             width: 300,
-            height: showFooter ? 380 : 332,
+            height: footerOn ? 380 : 332,
             overflow: "hidden",
             userSelect: "none",
             ...((slotProps?.paper as { sx?: SxProps<Theme> })?.sx ?? {}),
@@ -113,8 +117,8 @@ export function DatePicker({
             }
         }
 
-        // autoApply가 true면 날짜 선택 시 바로 닫기
-        if (autoApply) {
+        // 즉시 적용이면 날짜 선택 시 바로 닫기
+        if (applyImmediate) {
             onClose();
         }
     };
@@ -141,8 +145,8 @@ export function DatePicker({
                 holidays={holidays}
                 styles={styles}
                 showToday={showToday}
-                showFooter={showFooter}
-                autoApply={autoApply}
+                showFooter={footerOn}
+                autoApply={applyImmediate}
                 showTimePicker={false}
                 locale={locale}
                 texts={texts}

@@ -65,3 +65,17 @@ export const isSameDay = (d1: Date | null, d2: Date | null): boolean => {
         d1.getDate() === d2.getDate()
     );
 };
+
+/**
+ * `showFooter === false`이면 확인/취소 푸터가 없어 `autoApply === false`(임시 선택 후 확인)와
+ * 동시에 둘 수 없습니다. 이 조합이면 `autoApply`를 true로 맞춰 날짜 클릭이 곧바로 반영되게 합니다.
+ */
+export function resolveFooterAndAutoApply(
+    showFooter: boolean,
+    autoApply: boolean,
+): { showFooter: boolean; autoApply: boolean } {
+    if (!showFooter && !autoApply) {
+        return { showFooter: false, autoApply: true };
+    }
+    return { showFooter, autoApply };
+}
