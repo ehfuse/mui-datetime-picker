@@ -280,18 +280,15 @@ export function SimpleCalendar({
         if (!isDateDisabled(date)) {
             if (autoApply) {
                 // autoApply가 true면 바로 적용 (닫지 않음)
-                // 날짜가 변경되었을 때만 이벤트 발생
-                if (!isSameDay(selectedDate, date)) {
-                    onSelect(date);
-                    // 주 변경 콜백 (변경되었을 때만)
-                    if (isWeekChanged(date)) {
-                        const weekInfo = getWeekInfo(date);
-                        onWeekChange?.(
-                            weekInfo.weekOfMonth,
-                            weekInfo.startDate,
-                            weekInfo.endDate,
-                        );
-                    }
+                // 같은 날을 다시 눌러도 사용자 제스처이므로 항상 onSelect
+                onSelect(date);
+                if (isWeekChanged(date)) {
+                    const weekInfo = getWeekInfo(date);
+                    onWeekChange?.(
+                        weekInfo.weekOfMonth,
+                        weekInfo.startDate,
+                        weekInfo.endDate,
+                    );
                 }
                 // 시간 선택이 있으면 시간도 같이 적용 (변경되었을 때만)
                 if (
@@ -331,10 +328,8 @@ export function SimpleCalendar({
                 if (year !== todayYear || month !== todayMonth) {
                     onMonthChange?.(todayYear, todayMonth + 1);
                 }
-                // 날짜가 변경되었을 때만 onSelect 발생
-                if (!isSameDay(selectedDate, today)) {
-                    onSelect(today);
-                }
+                // 오늘 버튼: 같은 날(오늘)이어도 항상 onSelect
+                onSelect(today);
                 // 시간 선택이 있으면 시간도 같이 적용 (변경되었을 때만)
                 if (
                     showTimePicker &&
@@ -363,18 +358,15 @@ export function SimpleCalendar({
 
     const handleConfirm = () => {
         if (tempSelectedDate) {
-            // 날짜가 변경되었을 때만 이벤트 발생
-            if (!isSameDay(selectedDate, tempSelectedDate)) {
-                onSelect(tempSelectedDate);
-                // 주 변경 콜백 (변경되었을 때만)
-                if (isWeekChanged(tempSelectedDate)) {
-                    const weekInfo = getWeekInfo(tempSelectedDate);
-                    onWeekChange?.(
-                        weekInfo.weekOfMonth,
-                        weekInfo.startDate,
-                        weekInfo.endDate,
-                    );
-                }
+            // 확인: 임시 선택이 있으면 selectedDate와 같아도 항상 onSelect
+            onSelect(tempSelectedDate);
+            if (isWeekChanged(tempSelectedDate)) {
+                const weekInfo = getWeekInfo(tempSelectedDate);
+                onWeekChange?.(
+                    weekInfo.weekOfMonth,
+                    weekInfo.startDate,
+                    weekInfo.endDate,
+                );
             }
         }
         // 시간 선택이 있으면 시간도 적용 (변경되었을 때만)
