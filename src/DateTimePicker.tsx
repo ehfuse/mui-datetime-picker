@@ -98,7 +98,7 @@ export function DateTimePicker({
     // open될 때 외부 값으로 초기화
     useEffect(() => {
         if (open) {
-            console.log("[DateTimePicker] open init", {
+            console.error("[DateTimePicker] open init", {
                 selectedDate,
                 timeValue,
                 minuteStep,
@@ -132,7 +132,7 @@ export function DateTimePicker({
 
     // 날짜 선택 핸들러 (SimpleCalendar에서 호출)
     const handleDateSelect = (date: Date) => {
-        console.log("[DateTimePicker] handleDateSelect", {
+        console.error("[DateTimePicker] handleDateSelect", {
             date,
             prevSelectedDate: selectedDate,
             tempDate,
@@ -166,7 +166,7 @@ export function DateTimePicker({
                     ? String(second).padStart(2, "0")
                     : undefined,
         };
-        console.log("[DateTimePicker] handleCalendarTimeChange", {
+        console.error("[DateTimePicker] handleCalendarTimeChange", {
             hour,
             minute,
             second,

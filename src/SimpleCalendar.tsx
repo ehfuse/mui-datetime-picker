@@ -286,7 +286,7 @@ export function SimpleCalendar({
 
     const handleDateClick = (date: Date) => {
         if (!isDateDisabled(date)) {
-            console.log("[SimpleCalendar] handleDateClick", {
+            console.error("[SimpleCalendar] handleDateClick", {
                 date,
                 applyImmediate,
                 selectedDate,
@@ -372,7 +372,7 @@ export function SimpleCalendar({
     };
 
     const handleConfirm = () => {
-        console.log("[SimpleCalendar] handleConfirm before", {
+        console.error("[SimpleCalendar] handleConfirm before", {
             selectedDate,
             tempSelectedDate,
             today,
@@ -406,7 +406,7 @@ export function SimpleCalendar({
                 hasSeconds ? tempTime.second : undefined,
             );
         }
-        console.log("[SimpleCalendar] handleConfirm after", {
+        console.error("[SimpleCalendar] handleConfirm after", {
             emittedDate: tempSelectedDate,
             emittedTime: tempTime,
         });
