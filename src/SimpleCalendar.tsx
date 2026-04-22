@@ -257,7 +257,6 @@ export function SimpleCalendar({
     const goToPrevMonth = () => {
         const newDate = new Date(year, month - 1, 1);
         setViewDate(newDate);
-        setTempSelectedDate(null);
         // 월 변경 콜백 호출
         onMonthChange?.(newDate.getFullYear(), newDate.getMonth() + 1);
     };
@@ -265,7 +264,6 @@ export function SimpleCalendar({
     const goToNextMonth = () => {
         const newDate = new Date(year, month + 1, 1);
         setViewDate(newDate);
-        setTempSelectedDate(null);
         // 월 변경 콜백 호출
         onMonthChange?.(newDate.getFullYear(), newDate.getMonth() + 1);
     };
@@ -482,7 +480,6 @@ export function SimpleCalendar({
             }
             setViewDate(newDate);
             setViewMode("calendar");
-            setTempSelectedDate(null);
         }
     };
 
