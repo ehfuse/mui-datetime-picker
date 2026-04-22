@@ -98,6 +98,13 @@ export function DateTimePicker({
     // open될 때 외부 값으로 초기화
     useEffect(() => {
         if (open) {
+            console.log("[DateTimePicker] open init", {
+                selectedDate,
+                timeValue,
+                minuteStep,
+                secondStep,
+                hasSeconds,
+            });
             setTempDate(selectedDate ?? null);
             if (timeValue) {
                 setTempTime(timeValue);
@@ -125,6 +132,11 @@ export function DateTimePicker({
 
     // 날짜 선택 핸들러 (SimpleCalendar에서 호출)
     const handleDateSelect = (date: Date) => {
+        console.log("[DateTimePicker] handleDateSelect", {
+            date,
+            prevSelectedDate: selectedDate,
+            tempDate,
+        });
         setTempDate(date);
         // 날짜가 선택되면 항상 콜백 호출 (확인 버튼에서도 호출됨)
         onDateChange?.(date);
@@ -154,6 +166,14 @@ export function DateTimePicker({
                     ? String(second).padStart(2, "0")
                     : undefined,
         };
+        console.log("[DateTimePicker] handleCalendarTimeChange", {
+            hour,
+            minute,
+            second,
+            newTime,
+            tempDate,
+            selectedDate,
+        });
         setTempTime(newTime);
 
         // 시간이 변경되면 항상 콜백 호출 (확인 버튼에서도 호출됨)

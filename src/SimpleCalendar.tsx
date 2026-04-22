@@ -257,6 +257,7 @@ export function SimpleCalendar({
     const goToPrevMonth = () => {
         const newDate = new Date(year, month - 1, 1);
         setViewDate(newDate);
+        setTempSelectedDate(null);
         // 월 변경 콜백 호출
         onMonthChange?.(newDate.getFullYear(), newDate.getMonth() + 1);
     };
@@ -264,6 +265,7 @@ export function SimpleCalendar({
     const goToNextMonth = () => {
         const newDate = new Date(year, month + 1, 1);
         setViewDate(newDate);
+        setTempSelectedDate(null);
         // 월 변경 콜백 호출
         onMonthChange?.(newDate.getFullYear(), newDate.getMonth() + 1);
     };
@@ -284,6 +286,13 @@ export function SimpleCalendar({
 
     const handleDateClick = (date: Date) => {
         if (!isDateDisabled(date)) {
+            console.log("[SimpleCalendar] handleDateClick", {
+                date,
+                applyImmediate,
+                selectedDate,
+                tempSelectedDate,
+                tempTime,
+            });
             if (applyImmediate) {
                 // autoApply가 true면 바로 적용 (닫지 않음)
                 // 같은 날을 다시 눌러도 사용자 제스처이므로 항상 onSelect
@@ -363,16 +372,25 @@ export function SimpleCalendar({
     };
 
     const handleConfirm = () => {
-        // 날짜를 직접 선택하지 않아도 확인 시 오늘 날짜를 기본 적용
-        const confirmedDate = tempSelectedDate ?? today;
-        onSelect(confirmedDate);
-        if (isWeekChanged(confirmedDate)) {
-            const weekInfo = getWeekInfo(confirmedDate);
-            onWeekChange?.(
-                weekInfo.weekOfMonth,
-                weekInfo.startDate,
-                weekInfo.endDate,
-            );
+        console.log("[SimpleCalendar] handleConfirm before", {
+            selectedDate,
+            tempSelectedDate,
+            today,
+            tempTime,
+            applyImmediate,
+            showTimePicker,
+        });
+        if (tempSelectedDate) {
+            // 확인: 임시 선택이 있으면 selectedDate와 같아도 항상 onSelect
+            onSelect(tempSelectedDate);
+            if (isWeekChanged(tempSelectedDate)) {
+                const weekInfo = getWeekInfo(tempSelectedDate);
+                onWeekChange?.(
+                    weekInfo.weekOfMonth,
+                    weekInfo.startDate,
+                    weekInfo.endDate,
+                );
+            }
         }
         // 시간 선택이 있으면 시간도 적용 (변경되었을 때만)
         if (
@@ -388,6 +406,10 @@ export function SimpleCalendar({
                 hasSeconds ? tempTime.second : undefined,
             );
         }
+        console.log("[SimpleCalendar] handleConfirm after", {
+            emittedDate: tempSelectedDate,
+            emittedTime: tempTime,
+        });
         onClose();
     };
 
@@ -404,7 +426,11 @@ export function SimpleCalendar({
         });
 
         // autoApply면 바로 적용 (변경되었을 때만)
-        if (applyImmediate && onTimeChange && isTimeChanged(hour, minute, second)) {
+        if (
+            applyImmediate &&
+            onTimeChange &&
+            isTimeChanged(hour, minute, second)
+        ) {
             const hasSeconds =
                 timeFormat === "HH:mm:ss" || timeFormat === "hh:mm:ss";
             onTimeChange(hour, minute, hasSeconds ? second : undefined);
@@ -480,6 +506,7 @@ export function SimpleCalendar({
             }
             setViewDate(newDate);
             setViewMode("calendar");
+            setTempSelectedDate(null);
         }
     };
 
@@ -1007,6 +1034,7 @@ export function SimpleCalendar({
                     size="small"
                     onClick={handleConfirm}
                     variant="contained"
+                    disabled={tempSelectedDate === null}
                 >
                     {mergedLocale.confirm}
                 </Button>

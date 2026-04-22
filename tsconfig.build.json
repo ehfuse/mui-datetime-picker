@@ -19,7 +19,6 @@
         "declarationDir": "./dist",
         "outDir": "./dist",
         "ignoreDeprecations": "5.0",
-        "baseUrl": "."
     },
     "include": [
         "src/**/*"
