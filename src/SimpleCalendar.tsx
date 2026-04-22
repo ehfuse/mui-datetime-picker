@@ -365,17 +365,16 @@ export function SimpleCalendar({
     };
 
     const handleConfirm = () => {
-        if (tempSelectedDate) {
-            // 확인: 임시 선택이 있으면 selectedDate와 같아도 항상 onSelect
-            onSelect(tempSelectedDate);
-            if (isWeekChanged(tempSelectedDate)) {
-                const weekInfo = getWeekInfo(tempSelectedDate);
-                onWeekChange?.(
-                    weekInfo.weekOfMonth,
-                    weekInfo.startDate,
-                    weekInfo.endDate,
-                );
-            }
+        // 날짜를 직접 선택하지 않아도 확인 시 오늘 날짜를 기본 적용
+        const confirmedDate = tempSelectedDate ?? today;
+        onSelect(confirmedDate);
+        if (isWeekChanged(confirmedDate)) {
+            const weekInfo = getWeekInfo(confirmedDate);
+            onWeekChange?.(
+                weekInfo.weekOfMonth,
+                weekInfo.startDate,
+                weekInfo.endDate,
+            );
         }
         // 시간 선택이 있으면 시간도 적용 (변경되었을 때만)
         if (
@@ -1011,7 +1010,6 @@ export function SimpleCalendar({
                     size="small"
                     onClick={handleConfirm}
                     variant="contained"
-                    disabled={tempSelectedDate === null}
                 >
                     {mergedLocale.confirm}
                 </Button>
