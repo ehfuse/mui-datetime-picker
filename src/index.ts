@@ -18,6 +18,7 @@ export type {
     SimpleCalendarProps,
     TimePickerProps,
     TimeSelectorProps,
+    TimeSelectorSize,
     DatePickerProps,
     DateTimePickerProps,
     CalendarTexts,

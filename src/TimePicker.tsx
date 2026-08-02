@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useMemo } from "react";
-import { Box, Popover, Button } from "@mui/material";
+import { Box, Popover, Button, Dialog } from "@mui/material";
 import type { PopoverProps } from "@mui/material/Popover";
 import { TimeSelector } from "./TimeSelector";
 import type { TimePickerProps, AnchorElType } from "./types";
@@ -38,6 +38,7 @@ export function TimePicker({
     secondStep = 1,
     hideDisabledTime = false,
     autoApply = false,
+    centered = false,
     // 로케일 관련
     locale,
     texts,
@@ -116,6 +117,89 @@ export function TimePicker({
         onClose();
     };
 
+    // 선택 UI 본문 (Popover/Dialog 공용 — centered 면 큰 사이즈로 렌더)
+    const content = (
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                height: centered
+                    ? autoApply
+                        ? 420
+                        : 476
+                    : autoApply
+                      ? 288
+                      : 336,
+            }}
+        >
+            <Box sx={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
+                <TimeSelector
+                    value={{
+                        hour: String(tempHour).padStart(2, "0"),
+                        minute: String(tempMinute).padStart(2, "0"),
+                        second: hasSeconds
+                            ? String(tempSecond).padStart(2, "0")
+                            : undefined,
+                    }}
+                    onChange={handleTimeChange}
+                    format={format}
+                    minTime={minTime}
+                    maxTime={maxTime}
+                    minuteStep={minuteStep}
+                    secondStep={secondStep}
+                    showHeader={true}
+                    hideDisabledTime={hideDisabledTime}
+                    size={centered ? "large" : "medium"}
+                />
+            </Box>
+
+            {/* 하단 확인 버튼 - autoApply가 false일 때만 표시 */}
+            {!autoApply && (
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: centered ? 56 : 48,
+                        px: 1.5,
+                        borderTop: "1px solid",
+                        borderColor: "divider",
+                    }}
+                >
+                    <Button
+                        size={centered ? "medium" : "small"}
+                        onClick={handleConfirm}
+                        fullWidth
+                    >
+                        {mergedLocale.confirm}
+                    </Button>
+                </Box>
+            )}
+        </Box>
+    );
+
+    // centered: 앵커 무시, 화면 중앙 다이얼로그로 크게 표시 (모바일 터치 선택용)
+    if (centered) {
+        return (
+            <Dialog
+                open={open}
+                onClose={onClose}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            borderRadius: 3,
+                            width: hasSeconds ? 320 : 248,
+                            maxWidth: "calc(100vw - 48px)",
+                            userSelect: "none",
+                        },
+                    },
+                }}
+            >
+                {content}
+            </Dialog>
+        );
+    }
+
     return (
         <Popover
             open={open}
@@ -141,52 +225,7 @@ export function TimePicker({
                 },
             }}
         >
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: autoApply ? 288 : 336,
-                }}
-            >
-                <Box sx={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
-                    <TimeSelector
-                        value={{
-                            hour: String(tempHour).padStart(2, "0"),
-                            minute: String(tempMinute).padStart(2, "0"),
-                            second: hasSeconds
-                                ? String(tempSecond).padStart(2, "0")
-                                : undefined,
-                        }}
-                        onChange={handleTimeChange}
-                        format={format}
-                        minTime={minTime}
-                        maxTime={maxTime}
-                        minuteStep={minuteStep}
-                        secondStep={secondStep}
-                        showHeader={true}
-                        hideDisabledTime={hideDisabledTime}
-                    />
-                </Box>
-
-                {/* 하단 확인 버튼 - autoApply가 false일 때만 표시 */}
-                {!autoApply && (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            height: 48,
-                            px: 1.5,
-                            borderTop: "1px solid",
-                            borderColor: "divider",
-                        }}
-                    >
-                        <Button size="small" onClick={handleConfirm} fullWidth>
-                            {mergedLocale.confirm}
-                        </Button>
-                    </Box>
-                )}
-            </Box>
+            {content}
         </Popover>
     );
 }

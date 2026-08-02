@@ -24,7 +24,10 @@ export function TimeSelector({
     secondStep = 1,
     showHeader = true,
     hideDisabledTime = false,
+    size = "medium",
 }: TimeSelectorProps) {
+    // large 는 터치(모바일) 선택용 — 항목/헤더를 키운다
+    const isLarge = size === "large";
     const [selectedHour, setSelectedHour] = useState<number | null>(() => {
         const h = parseInt(value.hour, 10);
         if (!isNaN(h)) return h;
@@ -178,8 +181,8 @@ export function TimeSelector({
             data-value={val}
             onClick={disabled ? undefined : onClick}
             sx={{
-                py: 0.5,
-                px: 1,
+                py: isLarge ? 1 : 0.5,
+                px: isLarge ? 2 : 1,
                 cursor: disabled ? "not-allowed" : "pointer",
                 textAlign: "center",
                 borderRadius: 1,
@@ -199,12 +202,15 @@ export function TimeSelector({
                           : "action.hover",
                 },
                 fontVariantNumeric: "tabular-nums",
-                minWidth: 32,
+                minWidth: isLarge ? 64 : 32,
             }}
         >
             <Typography
-                variant="body2"
-                sx={{ fontWeight: selected ? 600 : 400 }}
+                variant={isLarge ? "body1" : "body2"}
+                sx={{
+                    fontWeight: selected ? 600 : 400,
+                    fontSize: isLarge ? 18 : undefined,
+                }}
             >
                 {String(val).padStart(2, "0")}
             </Typography>
@@ -287,14 +293,14 @@ export function TimeSelector({
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        height: 48,
+                        height: isLarge ? 56 : 48,
                         borderBottom: "1px solid",
                         borderColor: "divider",
                         gap: 0.5,
                     }}
                 >
                     <Typography
-                        variant="h6"
+                        variant={isLarge ? "h5" : "h6"}
                         sx={{
                             fontWeight: 500,
                             fontVariantNumeric: "tabular-nums",
@@ -315,7 +321,7 @@ export function TimeSelector({
                         <ColonIcon size="small" />
                     </Box>
                     <Typography
-                        variant="h6"
+                        variant={isLarge ? "h5" : "h6"}
                         sx={{
                             fontWeight: 500,
                             fontVariantNumeric: "tabular-nums",
@@ -338,7 +344,7 @@ export function TimeSelector({
                                 <ColonIcon size="small" />
                             </Box>
                             <Typography
-                                variant="h6"
+                                variant={isLarge ? "h5" : "h6"}
                                 sx={{
                                     fontWeight: 500,
                                     fontVariantNumeric: "tabular-nums",

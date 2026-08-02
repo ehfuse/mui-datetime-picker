@@ -116,9 +116,13 @@ export interface TimePickerProps {
     secondStep?: number; // 초 단위 간격
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부
     autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: false)
+    centered?: boolean; // 앵커 팝오버 대신 화면 중앙 다이얼로그로 크게 표시 (모바일용, 기본값: false)
     locale?: LocaleProp; // 로케일 (기본값: 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }
+
+/** TimeSelector 크기 (large 는 터치 선택용 큰 항목) */
+export type TimeSelectorSize = "medium" | "large";
 
 /** TimeSelector 컴포넌트 Props */
 export interface TimeSelectorProps {
@@ -131,6 +135,7 @@ export interface TimeSelectorProps {
     secondStep?: number; // 초 단위 간격 (기본값: 1)
     showHeader?: boolean; // 상단 시간 표시 헤더 (기본값: true)
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부 (기본값: false)
+    size?: TimeSelectorSize; // 항목/헤더 크기 (기본값: "medium")
 }
 
 /** DatePicker 컴포넌트 Props (날짜만 선택) */
