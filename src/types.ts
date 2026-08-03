@@ -156,6 +156,7 @@ export interface DatePickerProps
     maxDate?: Date; // 선택 가능한 최대 날짜
     holidays?: Date[]; // 공휴일 배열
     styles?: CalendarStyles; // 스타일 옵션
+    centered?: boolean; // 앵커 팝오버 대신 화면 중앙 다이얼로그로 표시 (모바일용, 기본값: false)
     showToday?: boolean; // 오늘 버튼 표시 여부
     showFooter?: boolean; // 푸터 표시 여부 (기본값: true)
     autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: true). 푸터 없음과 동시에 false면 내부적으로 true로 보정됨

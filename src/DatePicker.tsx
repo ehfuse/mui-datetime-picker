@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { Popover } from "@mui/material";
+import { Popover, Dialog } from "@mui/material";
 import type { PopoverProps } from "@mui/material/Popover";
 import type { SxProps, Theme } from "@mui/material/styles";
 import { SimpleCalendar } from "./SimpleCalendar";
@@ -44,6 +44,7 @@ export function DatePicker({
     maxDate,
     holidays = [],
     styles,
+    centered = false,
     showToday = true,
     showFooter = true,
     autoApply = true,
@@ -123,6 +124,56 @@ export function DatePicker({
         }
     };
 
+    // 달력 본문 (Popover/Dialog 공용)
+    const calendar = (
+        <SimpleCalendar
+            selectedDate={tempDate}
+            onSelect={handleDateSelect}
+            onClose={onClose}
+            minDate={minDate}
+            maxDate={maxDate}
+            holidays={holidays}
+            styles={styles}
+            showToday={showToday}
+            showFooter={footerOn}
+            autoApply={applyImmediate}
+            showTimePicker={false}
+            locale={locale}
+            texts={texts}
+            monthOnly={monthOnly}
+            yearOnly={yearOnly}
+            // monthOnly/yearOnly 모드일 때만 SimpleCalendar의 이벤트를 전달
+            // 일반 모드에서는 날짜 선택 시에만 년/월 이벤트 발생
+            onYearChange={monthOnly || yearOnly ? onYearChange : undefined}
+            onMonthChange={monthOnly || yearOnly ? onMonthChange : undefined}
+            onWeekChange={onWeekChange}
+        />
+    );
+
+    // centered: 앵커 무시, 화면 중앙 다이얼로그로 표시 (모바일 터치 선택용)
+    if (centered) {
+        return (
+            <Dialog
+                open={open}
+                onClose={onClose}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            borderRadius: 3,
+                            width: 300,
+                            maxWidth: "calc(100vw - 48px)",
+                            height: footerOn ? 380 : 332,
+                            overflow: "hidden",
+                            userSelect: "none",
+                        },
+                    },
+                }}
+            >
+                {calendar}
+            </Dialog>
+        );
+    }
+
     return (
         <Popover
             open={open}
@@ -136,30 +187,7 @@ export function DatePicker({
                 paper: mergedPaperProps,
             }}
         >
-            <SimpleCalendar
-                selectedDate={tempDate}
-                onSelect={handleDateSelect}
-                onClose={onClose}
-                minDate={minDate}
-                maxDate={maxDate}
-                holidays={holidays}
-                styles={styles}
-                showToday={showToday}
-                showFooter={footerOn}
-                autoApply={applyImmediate}
-                showTimePicker={false}
-                locale={locale}
-                texts={texts}
-                monthOnly={monthOnly}
-                yearOnly={yearOnly}
-                // monthOnly/yearOnly 모드일 때만 SimpleCalendar의 이벤트를 전달
-                // 일반 모드에서는 날짜 선택 시에만 년/월 이벤트 발생
-                onYearChange={monthOnly || yearOnly ? onYearChange : undefined}
-                onMonthChange={
-                    monthOnly || yearOnly ? onMonthChange : undefined
-                }
-                onWeekChange={onWeekChange}
-            />
+            {calendar}
         </Popover>
     );
 }
