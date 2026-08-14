@@ -8,12 +8,13 @@
  */
 
 import { useState, useEffect } from "react";
-import { Popover } from "@mui/material";
+import { Box, Button, Dialog, Divider, Popover } from "@mui/material";
 import type { PopoverProps } from "@mui/material/Popover";
 import type { SxProps, Theme } from "@mui/material/styles";
 import { SimpleCalendar } from "./SimpleCalendar";
+import { TimeSelector } from "./TimeSelector";
 import type { DateTimePickerProps, TimeValue, AnchorElType } from "./types";
-import { defaultLocale } from "./locale";
+import { defaultLocale, resolveLocale } from "./locale";
 import { resolveFooterAndAutoApply } from "./utils";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
@@ -38,6 +39,7 @@ export function DateTimePicker({
     open,
     onClose,
     anchorEl,
+    centered = false,
     selectedDate,
     onDateChange,
     timeValue,
@@ -98,13 +100,6 @@ export function DateTimePicker({
     // open될 때 외부 값으로 초기화
     useEffect(() => {
         if (open) {
-            console.error("[DateTimePicker] open init", {
-                selectedDate,
-                timeValue,
-                minuteStep,
-                secondStep,
-                hasSeconds,
-            });
             setTempDate(selectedDate ?? null);
             if (timeValue) {
                 setTempTime(timeValue);
@@ -132,11 +127,6 @@ export function DateTimePicker({
 
     // 날짜 선택 핸들러 (SimpleCalendar에서 호출)
     const handleDateSelect = (date: Date) => {
-        console.error("[DateTimePicker] handleDateSelect", {
-            date,
-            prevSelectedDate: selectedDate,
-            tempDate,
-        });
         setTempDate(date);
         // 날짜가 선택되면 항상 콜백 호출 (확인 버튼에서도 호출됨)
         onDateChange?.(date);
@@ -166,14 +156,6 @@ export function DateTimePicker({
                     ? String(second).padStart(2, "0")
                     : undefined,
         };
-        console.error("[DateTimePicker] handleCalendarTimeChange", {
-            hour,
-            minute,
-            second,
-            newTime,
-            tempDate,
-            selectedDate,
-        });
         setTempTime(newTime);
 
         // 시간이 변경되면 항상 콜백 호출 (확인 버튼에서도 호출됨)
@@ -183,6 +165,91 @@ export function DateTimePicker({
     // 팝오버 크기 결정 (datetime 전용)
     const width = 300 + (hasSeconds ? 165 : 110);
     const height = footerOn ? 380 : 332;
+
+    // centered: 앵커 무시, 화면 중앙 다이얼로그로 표시 (모바일 터치 선택용).
+    // 좁은 화면에서는 달력 옆 시간 컬럼이 잘리므로, 달력을 위에 두고 시간 선택을 하단에 가로로 배치한다.
+    if (centered) {
+        const resolvedTexts = { ...resolveLocale(locale), ...texts };
+        return (
+            <Dialog
+                open={open}
+                onClose={onClose}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            borderRadius: 3,
+                            width: 300,
+                            maxWidth: "calc(100vw - 48px)",
+                            overflow: "hidden",
+                            userSelect: "none",
+                        },
+                    },
+                }}
+            >
+                {/* 상단: 달력(시간 컬럼 없이) — 자체 푸터는 끄고 아래 전용 푸터를 쓴다. */}
+                <Box sx={{ height: 332, flexShrink: 0 }}>
+                    <SimpleCalendar
+                        selectedDate={tempDate}
+                        onSelect={handleDateSelect}
+                        onClose={onClose}
+                        minDate={minDate}
+                        maxDate={maxDate}
+                        holidays={holidays}
+                        styles={styles}
+                        showToday={showToday}
+                        showFooter={false}
+                        autoApply
+                        locale={locale}
+                        texts={texts}
+                        onWeekChange={onWeekChange}
+                    />
+                </Box>
+                <Divider />
+                {/* 하단: 시간 선택 — 터치하기 좋게 큰 항목(large)으로 가로 배치한다. */}
+                <Box sx={{ height: 208, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                    <TimeSelector
+                        value={{
+                            hour: String(tempTime.hour).padStart(2, "0"),
+                            minute: String(tempTime.minute).padStart(2, "0"),
+                            second: String(tempTime.second ?? "00").padStart(2, "0"),
+                        }}
+                        onChange={handleCalendarTimeChange}
+                        format={timeFormat}
+                        minTime={minTime}
+                        maxTime={maxTime}
+                        minuteStep={minuteStep}
+                        secondStep={secondStep}
+                        showHeader={true}
+                        hideDisabledTime={hideDisabledTime}
+                        size="large"
+                    />
+                </Box>
+                {/* 푸터: 오늘 / 닫기 */}
+                {footerOn ? (
+                    <>
+                        <Divider />
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                px: 1,
+                                py: 0.5,
+                                flexShrink: 0,
+                            }}
+                        >
+                            <Button size="small" onClick={() => handleDateSelect(new Date())}>
+                                {resolvedTexts.today}
+                            </Button>
+                            <Button size="small" onClick={onClose}>
+                                {resolvedTexts.close}
+                            </Button>
+                        </Box>
+                    </>
+                ) : null}
+            </Dialog>
+        );
+    }
 
     return (
         <Popover

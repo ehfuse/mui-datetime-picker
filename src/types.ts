@@ -169,6 +169,7 @@ export interface DatePickerProps
 /** DateTimePicker 컴포넌트 Props (날짜 + 시간 선택) */
 export interface DateTimePickerProps
     extends Omit<PopoverProps, "children" | "onClose" | "anchorEl"> {
+    centered?: boolean; // 앵커 무시, 화면 중앙 다이얼로그 표시 — 달력 위/시간 아래 세로 배치(모바일 터치 선택용)
     anchorEl?: AnchorElType; // Popover 앵커 엘리먼트 (ref 객체도 가능)
     onClose: () => void; // 닫기 콜백
     selectedDate?: Date | null; // 선택된 날짜
