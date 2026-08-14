@@ -667,7 +667,8 @@ export function SimpleCalendar({
                     style={{ width: "100%", height: "100%" }}
                     containerStyle={{ padding: "12px" }}
                     thumb={{ width: 6, color: "rgba(100, 100, 100, 0.5)" }}
-                    track={{ alignment: "right", margin: 0 }}
+                    // "outside"=오른쪽 끝 밀착 — 구 "right" 값은 overlay-scrollbar 1.6+ 에서 무효.
+                    track={{ alignment: "outside", margin: 0 }}
                     autoHide={{ enabled: true, delay: 1000 }}
                 >
                     <Box

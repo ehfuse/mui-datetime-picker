@@ -229,7 +229,8 @@ export function TimeSelector({
             ref={ref as React.RefObject<OverlayScrollbarRef>}
             style={{ height: "100%" }}
             thumb={{ width: 4 }}
-            track={{ alignment: "right" }}
+            // "outside"=열 오른쪽 끝에 밀착 — 구 "right" 값은 1.6+ 에서 무효라 트랙 중앙 배치(6px 여백)로 떨어진다.
+            track={{ alignment: "outside" }}
         >
             <div style={{ padding: "0.25rem" }}>
                 {items.map((item) => {

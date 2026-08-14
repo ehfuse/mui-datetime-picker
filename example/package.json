@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ehfuse/overlay-scrollbar": "^1.5.16",
+    "@ehfuse/overlay-scrollbar": "^1.7.27",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.6",
