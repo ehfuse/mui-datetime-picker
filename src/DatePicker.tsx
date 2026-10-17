@@ -58,6 +58,7 @@ export function DatePicker({
     monthOnly = false,
     // 년도만 선택
     yearOnly = false,
+    alwaysEmit = false,
     // 년월/년도 변경 콜백
     onMonthChange,
     onYearChange,
@@ -142,6 +143,7 @@ export function DatePicker({
             texts={texts}
             monthOnly={monthOnly}
             yearOnly={yearOnly}
+            alwaysEmit={alwaysEmit}
             // monthOnly/yearOnly 모드일 때만 SimpleCalendar의 이벤트를 전달
             // 일반 모드에서는 날짜 선택 시에만 년/월 이벤트 발생
             onYearChange={monthOnly || yearOnly ? onYearChange : undefined}

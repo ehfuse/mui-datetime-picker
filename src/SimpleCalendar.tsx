@@ -60,6 +60,8 @@ export function SimpleCalendar({
     monthOnly = false,
     // 년도만 선택
     yearOnly = false,
+    // 같은 값을 골라도 알린다(기본 false — 지금과 같다)
+    alwaysEmit = false,
     // 년월/년도 변경 콜백
     onMonthChange,
     onYearChange,
@@ -235,12 +237,14 @@ export function SimpleCalendar({
 
     // 년도가 변경되었는지 확인 (selectedDate 또는 오늘 날짜 기준)
     const isYearChanged = (newYear: number): boolean => {
+        if (alwaysEmit) return true;
         const compareDate = selectedDate || today;
         return compareDate.getFullYear() !== newYear;
     };
 
     // 월이 변경되었는지 확인 (selectedDate 또는 오늘 날짜 기준, month는 1-indexed)
     const isMonthChanged = (newYear: number, newMonth: number): boolean => {
+        if (alwaysEmit) return true;
         const compareDate = selectedDate || today;
         return (
             compareDate.getFullYear() !== newYear ||

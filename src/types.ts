@@ -82,6 +82,7 @@ export interface SimpleCalendarProps {
     autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: true). 푸터 없음과 동시에 false면 내부적으로 true로 보정됨
     monthOnly?: boolean; // 년월만 선택 (기본값: false)
     yearOnly?: boolean; // 년도만 선택 (기본값: false)
+    alwaysEmit?: boolean; // monthOnly/yearOnly 에서 지금 값과 같은 년월·년도를 골라도 onMonthChange/onYearChange 를 부른다(기본값: false). 값이 빈 칸에서 이번 달을 고르면 "안 바뀜" 으로 보고 아무것도 안 알렸다.
     onMonthChange?: (year: number, month: number) => void; // 년월 변경 콜백
     onYearChange?: (year: number) => void; // 년도 변경 콜백
     onWeekChange?: (
@@ -164,6 +165,7 @@ export interface DatePickerProps
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
     monthOnly?: boolean; // 년월만 선택 (기본값: false)
     yearOnly?: boolean; // 년도만 선택 (기본값: false)
+    alwaysEmit?: boolean; // monthOnly/yearOnly 에서 지금 값과 같은 년월·년도를 골라도 onMonthChange/onYearChange 를 부른다(기본값: false). 값이 빈 칸에서 이번 달을 고르면 "안 바뀜" 으로 보고 아무것도 안 알렸다.
 }
 
 /** DateTimePicker 컴포넌트 Props (날짜 + 시간 선택) */
