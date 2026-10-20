@@ -88,6 +88,7 @@ import { DateTimePicker } from "@ehfuse/mui-datetime-picker";
 | `minTime`          | `string`                                                        | -         | -        | Minimum selectable time                           |
 | `maxTime`          | `string`                                                        | -         | -        | Maximum selectable time                           |
 | `minuteStep`       | `number`                                                        | `1`       | -        | Minute step interval                              |
+| `timeVariant`      | `"list" \| "wheel"`                                           | `"list"`  | -        | Time picking style. `"wheel"` shows [AM/PM][hour][minute] wheels under the calendar with Cancel/OK (date and time are emitted on OK, autoApply ignored). Wheel minute step defaults to 5 |
 | `secondStep`       | `number`                                                        | `1`       | -        | Second step interval                              |
 | `hideDisabledTime` | `boolean`                                                       | `false`   | -        | Hide disabled time options                        |
 | `locale`           | [`LocaleProp`](#localeprop)                                     | `"ko"`    | -        | Locale (string or object)                         |
@@ -164,6 +165,7 @@ import { TimePicker } from "@ehfuse/mui-datetime-picker";
 | `minTime`          | `string`                                                  | -       | -        | Minimum selectable time     |
 | `maxTime`          | `string`                                                  | -       | -        | Maximum selectable time     |
 | `minuteStep`       | `number`                                                  | `1`     | -        | Minute step interval        |
+| `timeVariant`      | `"list" \| "wheel"`                                     | `"list"` | -        | Picking style. `"wheel"` shows [AM/PM][hour][minute] wheels with Cancel/OK (autoApply ignored), minute step defaults to 5 |
 | `secondStep`       | `number`                                                  | `1`     | -        | Second step interval        |
 | `hideDisabledTime` | `boolean`                                                 | `false` | -        | Hide disabled time options  |
 | `autoApply`        | `boolean`                                                 | `false` | -        | Apply selection immediately |
@@ -190,6 +192,7 @@ import { TimeSelector } from "@ehfuse/mui-datetime-picker";
 | `minTime`          | `string`                                                  | -       | -        | Minimum selectable time    |
 | `maxTime`          | `string`                                                  | -       | -        | Maximum selectable time    |
 | `minuteStep`       | `number`                                                  | `1`     | -        | Minute step interval       |
+| `variant`          | `"list" \| "wheel"`                                     | `"list"` | -        | Picking style. In `"wheel"` the row that snaps to the center is the value (onChange fires only after the user scrolls) |
 | `secondStep`       | `number`                                                  | `1`     | -        | Second step interval       |
 | `showHeader`       | `boolean`                                                 | `true`  | -        | Show time display header   |
 | `hideDisabledTime` | `boolean`                                                 | `false` | -        | Hide disabled time options |

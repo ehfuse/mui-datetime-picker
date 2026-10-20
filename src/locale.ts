@@ -28,6 +28,8 @@ export interface CalendarLocale {
     confirm: string; // 확인 버튼
     cancel: string; // 취소 버튼
     close: string; // 닫기 버튼
+    am?: string; // 오전 (바퀴 시간 고르기의 오전/오후 줄 — 없으면 "AM")
+    pm?: string; // 오후 (없으면 "PM")
 }
 
 /** 캘린더 텍스트 타입 (부분 커스터마이징용) */
@@ -54,6 +56,8 @@ export const koLocale: CalendarLocale = {
     confirm: "확인",
     cancel: "취소",
     close: "닫기",
+    am: "오전",
+    pm: "오후",
 };
 
 /** 영어 로케일 */
@@ -77,6 +81,8 @@ export const enLocale: CalendarLocale = {
     confirm: "OK",
     cancel: "Cancel",
     close: "Close",
+    am: "AM",
+    pm: "PM",
 };
 
 /** 일본어 로케일 */
@@ -100,6 +106,8 @@ export const jaLocale: CalendarLocale = {
     confirm: "確認",
     cancel: "キャンセル",
     close: "閉じる",
+    am: "午前",
+    pm: "午後",
 };
 
 /** 중국어 간체 로케일 */
@@ -123,6 +131,8 @@ export const zhCNLocale: CalendarLocale = {
     confirm: "确认",
     cancel: "取消",
     close: "关闭",
+    am: "上午",
+    pm: "下午",
 };
 
 /** 중국어 번체 로케일 */
@@ -146,6 +156,8 @@ export const zhTWLocale: CalendarLocale = {
     confirm: "確認",
     cancel: "取消",
     close: "關閉",
+    am: "上午",
+    pm: "下午",
 };
 
 /** 스페인어 로케일 */

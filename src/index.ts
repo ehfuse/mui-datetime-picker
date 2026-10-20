@@ -19,6 +19,7 @@ export type {
     TimePickerProps,
     TimeSelectorProps,
     TimeSelectorSize,
+    TimeSelectorVariant,
     DatePickerProps,
     DateTimePickerProps,
     CalendarTexts,
@@ -65,6 +66,7 @@ export {
 export { SimpleCalendar } from "./SimpleCalendar";
 export { TimePicker } from "./TimePicker";
 export { TimeSelector } from "./TimeSelector";
+export { WheelTimeSelector } from "./WheelTimeSelector";
 export { DatePicker } from "./DatePicker";
 export { DateTimePicker } from "./DateTimePicker";
 

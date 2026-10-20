@@ -13,8 +13,17 @@ import { OverlayScrollbar } from "@ehfuse/overlay-scrollbar";
 import type { OverlayScrollbarRef } from "@ehfuse/overlay-scrollbar";
 import { ColonIcon } from "./icons";
 import type { TimeSelectorProps } from "./types";
+import { WheelTimeSelector } from "./WheelTimeSelector";
+import { TOUCH_ITEM_FONT_SIZE } from "./constants";
 
-export function TimeSelector({
+/** 시간 선택 — variant="wheel" 이면 바퀴 방식, 아니면 숫자 목록(기본). */
+export function TimeSelector(props: TimeSelectorProps) {
+    if (props.variant === "wheel") return <WheelTimeSelector {...props} />;
+    return <ListTimeSelector {...props} />;
+}
+
+/** 숫자 목록을 굴려 눌러 고르는 예전 방식. */
+function ListTimeSelector({
     value,
     onChange,
     format,
@@ -209,7 +218,7 @@ export function TimeSelector({
                 variant={isLarge ? "body1" : "body2"}
                 sx={{
                     fontWeight: selected ? 600 : 400,
-                    fontSize: isLarge ? 18 : undefined,
+                    fontSize: isLarge ? TOUCH_ITEM_FONT_SIZE : undefined,
                 }}
             >
                 {String(val).padStart(2, "0")}

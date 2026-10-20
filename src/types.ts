@@ -118,9 +118,17 @@ export interface TimePickerProps {
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부
     autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: false)
     centered?: boolean; // 앵커 팝오버 대신 화면 중앙 다이얼로그로 크게 표시 (모바일용, 기본값: false)
+    timeVariant?: TimeSelectorVariant; // 고르는 방식 (기본값: "list"). "wheel" 이면 바퀴 + 취소/확인(autoApply 무시), 분 간격 기본 5
     locale?: LocaleProp; // 로케일 (기본값: 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }
+
+/**
+ * 시간 고르는 방식
+ * - "list": 시·분 숫자 목록을 굴려 눌러 고른다(기본)
+ * - "wheel": [오전/오후] [시] [분] 바퀴를 굴려 가운데 줄에 멈춘 값이 곧 선택값(휴대폰 터치용). 분 간격 기본 5, 확인 단추로 적용
+ */
+export type TimeSelectorVariant = "list" | "wheel";
 
 /** TimeSelector 크기 (large 는 터치 선택용 큰 항목) */
 export type TimeSelectorSize = "medium" | "large";
@@ -137,6 +145,9 @@ export interface TimeSelectorProps {
     showHeader?: boolean; // 상단 시간 표시 헤더 (기본값: true)
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부 (기본값: false)
     size?: TimeSelectorSize; // 항목/헤더 크기 (기본값: "medium")
+    variant?: TimeSelectorVariant; // 고르는 방식 (기본값: "list"). "wheel" 은 showHeader·size·hideDisabledTime 을 쓰지 않는다
+    locale?: LocaleProp; // 로케일 — wheel 의 오전/오후 글자 (기본값: 'ko')
+    texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }
 
 /** DatePicker 컴포넌트 Props (날짜만 선택) */
@@ -198,6 +209,7 @@ export interface DateTimePickerProps
     minuteStep?: number; // 분 단위 간격
     secondStep?: number; // 초 단위 간격
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부
+    timeVariant?: TimeSelectorVariant; // 시간 고르는 방식 (기본값: "list"). "wheel" 이면 달력 아래 바퀴를 붙인 한 창 + 취소/확인 — 날짜·시간을 확인할 때 한꺼번에 알린다(autoApply 무시), 분 간격 기본 5
     locale?: LocaleProp; // 로케일 (기본값: 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }

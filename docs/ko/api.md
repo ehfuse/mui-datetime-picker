@@ -88,6 +88,7 @@ import { DateTimePicker } from "@ehfuse/mui-datetime-picker";
 | `minTime`          | `string`                                                        | -         | -    | 선택 가능한 최소 시간                   |
 | `maxTime`          | `string`                                                        | -         | -    | 선택 가능한 최대 시간                   |
 | `minuteStep`       | `number`                                                        | `1`       | -    | 분 단위 간격                            |
+| `timeVariant`      | `"list" \| "wheel"`                                           | `"list"`  | -    | 시간 고르는 방식. `"wheel"` 은 달력 아래 [오전/오후][시][분] 바퀴 + 취소/확인(확인 때 날짜·시간을 함께 알림, autoApply 무시). 바퀴의 분 간격 기본 5 |
 | `secondStep`       | `number`                                                        | `1`       | -    | 초 단위 간격                            |
 | `hideDisabledTime` | `boolean`                                                       | `false`   | -    | 선택 불가 시간 숨김 여부                |
 | `locale`           | [`LocaleProp`](#localeprop)                                     | `"ko"`    | -    | 로케일 (문자열 또는 객체)               |
@@ -164,6 +165,7 @@ import { TimePicker } from "@ehfuse/mui-datetime-picker";
 | `minTime`          | `string`                                                  | -       | -    | 선택 가능한 최소 시간     |
 | `maxTime`          | `string`                                                  | -       | -    | 선택 가능한 최대 시간     |
 | `minuteStep`       | `number`                                                  | `1`     | -    | 분 단위 간격              |
+| `timeVariant`      | `"list" \| "wheel"`                                     | `"list"` | -    | 고르는 방식. `"wheel"` 은 [오전/오후][시][분] 바퀴 + 취소/확인(autoApply 무시), 분 간격 기본 5 |
 | `secondStep`       | `number`                                                  | `1`     | -    | 초 단위 간격              |
 | `hideDisabledTime` | `boolean`                                                 | `false` | -    | 선택 불가 시간 숨김 여부  |
 | `autoApply`        | `boolean`                                                 | `false` | -    | 선택 즉시 적용 여부       |
@@ -190,6 +192,7 @@ import { TimeSelector } from "@ehfuse/mui-datetime-picker";
 | `minTime`          | `string`                                                  | -       | -    | 선택 가능한 최소 시간    |
 | `maxTime`          | `string`                                                  | -       | -    | 선택 가능한 최대 시간    |
 | `minuteStep`       | `number`                                                  | `1`     | -    | 분 단위 간격             |
+| `variant`          | `"list" \| "wheel"`                                     | `"list"` | -    | 고르는 방식. `"wheel"` 은 굴려 가운데 줄에 멈춘 값이 선택값(사용자가 굴린 뒤에만 onChange) |
 | `secondStep`       | `number`                                                  | `1`     | -    | 초 단위 간격             |
 | `showHeader`       | `boolean`                                                 | `true`  | -    | 상단 시간 표시 헤더      |
 | `hideDisabledTime` | `boolean`                                                 | `false` | -    | 선택 불가 시간 숨김 여부 |
