@@ -31,6 +31,13 @@ const SETTLE_DELAY_MS = 120;
 /** 가운데 줄 위아래 여백 — 첫 줄 · 끝 줄도 가운데까지 굴러오게 한다. */
 const EDGE_PAD = WHEEL_ITEM_HEIGHT * Math.floor(WHEEL_VISIBLE_ROWS / 2);
 
+/**
+ * 끝없이 도는 줄(loop)은 같은 항목을 이만큼 이어 그리고 가운데 벌에서 시작한다(1.0.26, 업무함 2026-10-20 사용자 지시 "시간은 무한 스크롤").
+ * 멈출 때마다 가운데 벌의 같은 자리로 소리 없이 옮겨 놓으므로, 한 번에 이 벌 수의 절반 넘게 굴리지 않는 한 끝에 닿지 않는다.
+ */
+const LOOP_COPIES = 7;
+const LOOP_MID = Math.floor(LOOP_COPIES / 2);
+
 interface WheelItem {
     value: number;
     label: string;
@@ -42,14 +49,22 @@ interface WheelColumnProps {
     value: number; // 지금 고른 값(바깥에서 바뀌면 그 줄로 굴러간다)
     onSelect: (value: number) => void; // 사용자가 굴려 멈춘 값
     ariaLabel: string;
+    loop?: boolean; // 끝없이 돌기(마지막 다음이 처음) — 시 · 분 줄
 }
 
 /** 바퀴 한 줄. */
-function WheelColumn({ items, value, onSelect, ariaLabel }: WheelColumnProps) {
+function WheelColumn({ items, value, onSelect, ariaLabel, loop = false }: WheelColumnProps) {
     const ref = useRef<HTMLDivElement>(null);
-    // 가운데에 와 있는 줄 — 굴리는 동안에도 진하게 보이도록 스크롤마다 갱신한다(바뀔 때만 다시 그림).
+    const len = items.length;
+    const copies = loop ? LOOP_COPIES : 1;
+    const midBase = loop ? LOOP_MID * len : 0;
+    /** 그린 줄 번호(row) → 항목 번호. */
+    const itemAt = (row: number) => ((row % len) + len) % len;
+    const rowCount = len * copies;
+    const clampRow = (row: number) => Math.min(rowCount - 1, Math.max(0, row));
+    // 가운데에 와 있는 줄(그린 줄 번호) — 굴리는 동안에도 진하게 보이도록 스크롤마다 갱신한다(바뀔 때만 다시 그림).
     const [centerIndex, setCenterIndex] = useState(() =>
-        Math.max(0, items.findIndex((it) => it.value === value)),
+        midBase + Math.max(0, items.findIndex((it) => it.value === value)),
     );
     // 사용자가 손댄 뒤에만 멈춘 값을 알린다 — 처음 열 때 값 자리로 옮기는 스크롤까지 "고름" 으로 치면
     // 13:07 처럼 간격에 안 맞는 값이 열기만 해도 13:05 로 바뀐다.
@@ -59,12 +74,22 @@ function WheelColumn({ items, value, onSelect, ariaLabel }: WheelColumnProps) {
     const settleTimerRef = useRef<number | undefined>(undefined);
     const lastEmittedRef = useRef<number>(value);
 
-    const indexOf = (v: number) => items.findIndex((it) => it.value === v);
+    /**
+     * 값이 있는 줄 번호 — 끝없이 도는 줄은 지금 자리에서 가장 가까운 벌의 그 값으로 간다
+     * (오전/오후를 바꿔 시가 12칸 옮겨질 때 멀리 돌아가지 않게).
+     */
+    const rowOf = (v: number, nearRow?: number) => {
+        const item = items.findIndex((it) => it.value === v);
+        if (item < 0) return -1;
+        if (!loop) return item;
+        const base = nearRow === undefined ? midBase : Math.round((nearRow - item) / len) * len;
+        return clampRow(base + item);
+    };
 
     // 처음 그릴 때 값 자리로 바로 옮긴다(부드럽게 굴리면 열리면서 줄이 휙 지나간다).
     useLayoutEffect(() => {
         const el = ref.current;
-        const idx = indexOf(value);
+        const idx = rowOf(value);
         if (el && idx >= 0) el.scrollTop = idx * WHEEL_ITEM_HEIGHT;
         // 처음 한 번만
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,9 +99,11 @@ function WheelColumn({ items, value, onSelect, ariaLabel }: WheelColumnProps) {
     useEffect(() => {
         lastEmittedRef.current = value;
         const el = ref.current;
-        const idx = indexOf(value);
-        if (!el || idx < 0) return;
-        if (Math.round(el.scrollTop / WHEEL_ITEM_HEIGHT) === idx) return;
+        if (!el) return;
+        const currentRow = Math.round(el.scrollTop / WHEEL_ITEM_HEIGHT);
+        if (items[itemAt(currentRow)]?.value === value) return;
+        const idx = rowOf(value, currentRow);
+        if (idx < 0) return;
         // 손대기 전(창이 열리며 값이 채워질 때)은 바로 옮긴다 — 부드럽게 굴리면 열리면서 줄이 휙 지나간다.
         el.scrollTo({
             top: idx * WHEEL_ITEM_HEIGHT,
@@ -90,11 +117,16 @@ function WheelColumn({ items, value, onSelect, ariaLabel }: WheelColumnProps) {
         window.clearTimeout(settleTimerRef.current);
         const el = ref.current;
         if (!el || !touchedRef.current || fingerDownRef.current) return;
-        const idx = Math.min(
-            items.length - 1,
-            Math.max(0, Math.round(el.scrollTop / WHEEL_ITEM_HEIGHT)),
-        );
-        const next = items[idx]?.value;
+        const row = clampRow(Math.round(el.scrollTop / WHEEL_ITEM_HEIGHT));
+        // 끝없이 도는 줄은 멈춘 자리를 가운데 벌의 같은 항목으로 소리 없이 옮겨 둔다 — 다음에 어느 쪽으로 굴려도 끝이 멀다.
+        if (loop) {
+            const midRow = midBase + itemAt(row);
+            if (midRow !== row) {
+                el.scrollTop = midRow * WHEEL_ITEM_HEIGHT;
+                setCenterIndex(midRow);
+            }
+        }
+        const next = items[itemAt(row)]?.value;
         if (next === undefined || next === lastEmittedRef.current) return;
         lastEmittedRef.current = next;
         onSelect(next);
@@ -117,10 +149,7 @@ function WheelColumn({ items, value, onSelect, ariaLabel }: WheelColumnProps) {
     const handleScroll = () => {
         const el = ref.current;
         if (!el) return;
-        const idx = Math.min(
-            items.length - 1,
-            Math.max(0, Math.round(el.scrollTop / WHEEL_ITEM_HEIGHT)),
-        );
+        const idx = clampRow(Math.round(el.scrollTop / WHEEL_ITEM_HEIGHT));
         if (idx !== centerIndex) setCenterIndex(idx);
         window.clearTimeout(settleTimerRef.current);
         settleTimerRef.current = window.setTimeout(
@@ -180,11 +209,12 @@ function WheelColumn({ items, value, onSelect, ariaLabel }: WheelColumnProps) {
             }}
         >
             <Box sx={{ height: EDGE_PAD }} />
-            {items.map((item, idx) => {
+            {Array.from({ length: rowCount }, (_, idx) => {
+                const item = items[itemAt(idx)];
                 const isCenter = idx === centerIndex;
                 return (
                     <Box
-                        key={item.value}
+                        key={idx}
                         role="option"
                         aria-selected={isCenter}
                         data-value={item.value}
@@ -320,17 +350,17 @@ export function WheelTimeSelector({
     };
 
     const isAm = hour < 12;
-    const hour12 = hour % 12 || 12;
 
-    const hourItems: WheelItem[] = Array.from({ length: 12 }, (_, i) => {
-        const h12 = i + 1;
-        const h24 = is12HourValue ? h12 : (h12 % 12) + (isAm ? 0 : 12);
-        return {
-            value: h12,
-            label: String(h12),
-            disabled: !minutes.some((m) => inRange(h24, m)),
-        };
-    });
+    // 시 줄은 24시간을 한 바퀴로 두고 글자만 12시간으로 보인다(1.0.26, 업무함 2026-10-20 사용자 지시 "12시가 넘어가면 오전 · 오후가 바뀌어야") —
+    // 11 → 12 로 넘어가면 오후(또는 오전)로, 12 → 11 로 거슬러 가면 다시 바뀐다. 오전/오후 줄은 값이 바뀌면 따라 굴러간다.
+    // "hh" 포맷(값이 1~12)은 오전/오후가 없어 1~12 한 바퀴다.
+    const hourItems: WheelItem[] = is12HourValue
+        ? Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: String(i + 1) }))
+        : Array.from({ length: 24 }, (_, h24) => ({
+              value: h24,
+              label: String(h24 % 12 || 12),
+              disabled: !minutes.some((m) => inRange(h24, m)),
+          }));
     const minuteItems: WheelItem[] = minutes.map((m) => ({
         value: m,
         label: String(m).padStart(2, "0"),
@@ -395,14 +425,14 @@ export function WheelTimeSelector({
                 )}
                 <WheelColumn
                     ariaLabel="hour"
+                    loop
                     items={hourItems}
-                    value={is12HourValue ? hour : hour12}
-                    onSelect={(h12) =>
-                        commit(is12HourValue ? h12 : (h12 % 12) + (isAm ? 0 : 12), minute, second)
-                    }
+                    value={hour}
+                    onSelect={(h) => commit(h, minute, second)}
                 />
                 <WheelColumn
                     ariaLabel="minute"
+                    loop
                     items={minuteItems}
                     value={minute}
                     onSelect={(m) => commit(hour, m, second)}
