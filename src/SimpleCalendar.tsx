@@ -290,13 +290,6 @@ export function SimpleCalendar({
 
     const handleDateClick = (date: Date) => {
         if (!isDateDisabled(date)) {
-            console.error("[SimpleCalendar] handleDateClick", {
-                date,
-                applyImmediate,
-                selectedDate,
-                tempSelectedDate,
-                tempTime,
-            });
             if (applyImmediate) {
                 // autoApply가 true면 바로 적용 (닫지 않음)
                 // 같은 날을 다시 눌러도 사용자 제스처이므로 항상 onSelect
@@ -376,14 +369,6 @@ export function SimpleCalendar({
     };
 
     const handleConfirm = () => {
-        console.error("[SimpleCalendar] handleConfirm before", {
-            selectedDate,
-            tempSelectedDate,
-            today,
-            tempTime,
-            applyImmediate,
-            showTimePicker,
-        });
         if (tempSelectedDate) {
             // 확인: 임시 선택이 있으면 selectedDate와 같아도 항상 onSelect
             onSelect(tempSelectedDate);
@@ -410,10 +395,6 @@ export function SimpleCalendar({
                 hasSeconds ? tempTime.second : undefined,
             );
         }
-        console.error("[SimpleCalendar] handleConfirm after", {
-            emittedDate: tempSelectedDate,
-            emittedTime: tempTime,
-        });
         onClose();
     };
 
