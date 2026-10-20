@@ -20,8 +20,11 @@ import { TOUCH_ITEM_FONT_SIZE } from "./constants";
 
 /** 한 줄 높이 — 손가락으로 집기 좋은 높이(목록 방식 large 항목과 거의 같은 높이). */
 export const WHEEL_ITEM_HEIGHT = 44;
-/** 보이는 줄 수(가운데 + 위아래 두 줄씩). 홀수여야 가운데 줄이 생긴다. */
-export const WHEEL_VISIBLE_ROWS = 5;
+/**
+ * 보이는 줄 수(가운데 + 위아래 한 줄씩). 홀수여야 가운데 줄이 생긴다.
+ * 5 → 3(1.0.27, 업무함 2026-10-20 사용자 지적 "위아래 2행까지는 필요 없다") — 앞뒤 값 하나씩이면 어디쯤인지 알 수 있고, 달력 아래에 붙을 때 창이 너무 길었다.
+ */
+export const WHEEL_VISIBLE_ROWS = 3;
 /** 바퀴의 전체 높이 — 창 크기를 정할 때 바깥에서도 쓴다. */
 export const WHEEL_HEIGHT = WHEEL_ITEM_HEIGHT * WHEEL_VISIBLE_ROWS;
 
@@ -410,9 +413,9 @@ export function WheelTimeSelector({
                     flex: 1,
                     minWidth: 0,
                     WebkitMaskImage:
-                        "linear-gradient(to bottom, transparent 0, #000 35%, #000 65%, transparent 100%)",
+                        "linear-gradient(to bottom, rgba(0,0,0,0.35) 0, #000 33%, #000 67%, rgba(0,0,0,0.35) 100%)",
                     maskImage:
-                        "linear-gradient(to bottom, transparent 0, #000 35%, #000 65%, transparent 100%)",
+                        "linear-gradient(to bottom, rgba(0,0,0,0.35) 0, #000 33%, #000 67%, rgba(0,0,0,0.35) 100%)",
                 }}
             >
                 {!is12HourValue && (
