@@ -14,7 +14,7 @@ import type { SxProps, Theme } from "@mui/material/styles";
 import { SimpleCalendar } from "./SimpleCalendar";
 import { TimeSelector } from "./TimeSelector";
 import type { DateTimePickerProps, TimeValue, AnchorElType } from "./types";
-import { defaultLocale, resolveLocale } from "./locale";
+import { useCalendarLocale } from "./locale";
 import { getWeekInfo, isSameWeek, resolveFooterAndAutoApply } from "./utils";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
@@ -62,7 +62,7 @@ export function DateTimePicker({
     transformOrigin = { vertical: "top", horizontal: "left" },
     slotProps,
     // 로케일 관련
-    locale = defaultLocale,
+    locale,
     texts,
     // 년월/년도 변경 콜백
     onMonthChange,
@@ -70,6 +70,8 @@ export function DateTimePicker({
     onWeekChange,
     ...popoverProps
 }: DateTimePickerProps) {
+    // locale prop 이 없으면 앱 전역 화면 언어(setMuiDatetimePickerLocale) — 바뀌면 다시 그린다(1.1.0)
+    const calendarLocale = useCalendarLocale(locale);
     const { showFooter: footerOn, autoApply: applyImmediate } =
         resolveFooterAndAutoApply(showFooter, autoApply);
 
@@ -217,7 +219,7 @@ export function DateTimePicker({
     };
 
     if (isWheel) {
-        const resolvedTexts = { ...resolveLocale(locale), ...texts };
+        const resolvedTexts = { ...calendarLocale, ...texts };
         const wheelBody = (
             <>
                 {/* 위: 달력 — 고른 날은 임시로만 쥐고 있다가 확인 때 알린다. */}
@@ -331,7 +333,7 @@ export function DateTimePicker({
     // centered: 앵커 무시, 화면 중앙 다이얼로그로 표시 (모바일 터치 선택용).
     // 좁은 화면에서는 달력 옆 시간 컬럼이 잘리므로, 달력을 위에 두고 시간 선택을 하단에 가로로 배치한다.
     if (centered) {
-        const resolvedTexts = { ...resolveLocale(locale), ...texts };
+        const resolvedTexts = { ...calendarLocale, ...texts };
         return (
             <Dialog
                 open={open}

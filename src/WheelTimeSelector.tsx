@@ -15,7 +15,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import type { TimeSelectorProps } from "./types";
-import { resolveLocale } from "./locale";
+import { useCalendarLocale } from "./locale";
 import { TOUCH_ITEM_FONT_SIZE } from "./constants";
 
 /** 한 줄 높이 — 손가락으로 집기 좋은 높이(목록 방식 large 항목과 거의 같은 높이). */
@@ -286,7 +286,8 @@ export function WheelTimeSelector({
     const hasSeconds = format === "HH:mm:ss" || format === "hh:mm:ss";
     // "hh" 포맷은 값 자체가 1~12 라 오전/오후를 붙일 데가 없다 — 시 줄만 1~12 로 둔다.
     const is12HourValue = format.startsWith("hh");
-    const merged = { ...resolveLocale(locale), ...texts };
+    const resolvedLocale = useCalendarLocale(locale);
+    const merged = { ...resolvedLocale, ...texts };
     const amLabel = merged.am ?? "AM";
     const pmLabel = merged.pm ?? "PM";
 

@@ -7,6 +7,8 @@
  * @author 김영진 (ehfuse@gmail.com)
  */
 
+import { useSyncExternalStore } from "react";
+
 /** 캘린더 로케일 타입 (텍스트 커스터마이징) */
 export interface CalendarLocale {
     weekdays: [string, string, string, string, string, string, string]; // 요일 (일~토)
@@ -30,6 +32,9 @@ export interface CalendarLocale {
     close: string; // 닫기 버튼
     am?: string; // 오전 (바퀴 시간 고르기의 오전/오후 줄 — 없으면 "AM")
     pm?: string; // 오후 (없으면 "PM")
+    selectYear?: string; // 연도 고르기 머리 글 (없으면 영어)
+    selectMonth?: string; // 월 고르기 머리 글 — {{year}} 자리 (없으면 영어)
+    yearMonth?: string; // 달력 머리 "2026년 1월" 꼴 — {{year}} · {{month}}(months 의 글) 자리 (없으면 "{{month}} {{year}}")
 }
 
 /** 캘린더 텍스트 타입 (부분 커스터마이징용) */
@@ -58,6 +63,9 @@ export const koLocale: CalendarLocale = {
     close: "닫기",
     am: "오전",
     pm: "오후",
+    selectYear: "연도 선택",
+    selectMonth: "{{year}}년 - 월 선택",
+    yearMonth: "{{year}}년 {{month}}",
 };
 
 /** 영어 로케일 */
@@ -83,6 +91,9 @@ export const enLocale: CalendarLocale = {
     close: "Close",
     am: "AM",
     pm: "PM",
+    selectYear: "Select year",
+    selectMonth: "{{year}} - Select month",
+    yearMonth: "{{month}} {{year}}",
 };
 
 /** 일본어 로케일 */
@@ -108,6 +119,9 @@ export const jaLocale: CalendarLocale = {
     close: "閉じる",
     am: "午前",
     pm: "午後",
+    selectYear: "年を選択",
+    selectMonth: "{{year}}年 - 月を選択",
+    yearMonth: "{{year}}年 {{month}}",
 };
 
 /** 중국어 간체 로케일 */
@@ -133,6 +147,9 @@ export const zhCNLocale: CalendarLocale = {
     close: "关闭",
     am: "上午",
     pm: "下午",
+    selectYear: "选择年份",
+    selectMonth: "{{year}}年 - 选择月份",
+    yearMonth: "{{year}}年 {{month}}",
 };
 
 /** 중국어 번체 로케일 */
@@ -158,6 +175,9 @@ export const zhTWLocale: CalendarLocale = {
     close: "關閉",
     am: "上午",
     pm: "下午",
+    selectYear: "選擇年份",
+    selectMonth: "{{year}}年 - 選擇月份",
+    yearMonth: "{{year}}年 {{month}}",
 };
 
 /** 스페인어 로케일 */
@@ -204,6 +224,9 @@ export const frLocale: CalendarLocale = {
     confirm: "OK",
     cancel: "Annuler",
     close: "Fermer",
+    selectYear: "Choisir l'année",
+    selectMonth: "{{year}} - Choisir le mois",
+    yearMonth: "{{month}} {{year}}",
 };
 
 /** 독일어 로케일 */
@@ -227,6 +250,9 @@ export const deLocale: CalendarLocale = {
     confirm: "OK",
     cancel: "Abbrechen",
     close: "Schließen",
+    selectYear: "Jahr auswählen",
+    selectMonth: "{{year}} - Monat auswählen",
+    yearMonth: "{{month}} {{year}}",
 };
 
 /** 포르투갈어 로케일 */
@@ -296,6 +322,9 @@ export const itLocale: CalendarLocale = {
     confirm: "OK",
     cancel: "Annulla",
     close: "Chiudi",
+    selectYear: "Seleziona l'anno",
+    selectMonth: "{{year}} - Seleziona il mese",
+    yearMonth: "{{month}} {{year}}",
 };
 
 /** 아랍어 로케일 */
@@ -365,6 +394,9 @@ export const viLocale: CalendarLocale = {
     confirm: "OK",
     cancel: "Hủy",
     close: "Đóng",
+    selectYear: "Chọn năm",
+    selectMonth: "{{year}} - Chọn tháng",
+    yearMonth: "{{month}} {{year}}",
 };
 
 /** 태국어 로케일 */
@@ -520,9 +552,54 @@ export type LocaleProp = CalendarLocale | LocaleKey;
  * @returns CalendarLocale 객체
  */
 export function resolveLocale(locale: LocaleProp | undefined): CalendarLocale {
-    if (!locale) return defaultLocale;
+    if (!locale) return locales[globalLocaleKey];
     if (typeof locale === "string") {
-        return locales[locale] ?? defaultLocale;
+        return locales[locale] ?? locales[globalLocaleKey];
     }
     return locale;
+}
+
+// ── 앱 전역 화면 언어(2026-10-26 — 1.1.0) ──────────────────────────────────────────
+// locale prop 을 안 준 달력 · 시간 고르기는 이 언어를 쓴다. 기본은 한국어(전과 같다). prop 이 이긴다.
+let globalLocaleKey: LocaleKey = "ko";
+const localeListeners = new Set<() => void>();
+
+/** "en-US" · "zh_TW" 같은 언어 코드를 로케일 키로 — 모르는 언어면 영어 */
+export function langToLocaleKey(lang?: string | null): LocaleKey {
+    const raw = String(lang ?? "").trim();
+    if (raw in locales) return raw as LocaleKey;
+    const [base, region = ""] = raw.toLowerCase().split(/[-_]/);
+    if (base === "zh") return /^(tw|hk|mo|hant)$/.test(region) ? "zhTW" : "zhCN";
+    return (base in locales ? base : "en") as LocaleKey;
+}
+
+/** 앱 전역 화면 언어를 정한다(앱이 언어를 바꿀 때마다 부른다) — 열린 달력도 다시 그린다. */
+export function setMuiDatetimePickerLocale(lang: string): void {
+    const next = langToLocaleKey(lang);
+    if (next === globalLocaleKey) return;
+    globalLocaleKey = next;
+    localeListeners.forEach((fn) => fn());
+}
+
+/** 지금 앱 전역 화면 언어(로케일 키) */
+export function getMuiDatetimePickerLocale(): LocaleKey {
+    return globalLocaleKey;
+}
+
+function subscribeLocale(fn: () => void): () => void {
+    localeListeners.add(fn);
+    return () => {
+        localeListeners.delete(fn);
+    };
+}
+
+/** 컴포넌트용 — locale prop(있으면) 또는 전역 언어의 CalendarLocale. 전역 언어가 바뀌면 다시 그린다. */
+export function useCalendarLocale(locale: LocaleProp | undefined): CalendarLocale {
+    const key = useSyncExternalStore(subscribeLocale, getMuiDatetimePickerLocale, getMuiDatetimePickerLocale);
+    return locale ? resolveLocale(locale) : locales[key];
+}
+
+/** {{year}} 같은 자리에 값을 넣는다 */
+export function fillLocaleText(template: string, params: Record<string, string | number>): string {
+    return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (m, name) => (params[name] == null ? m : String(params[name])));
 }

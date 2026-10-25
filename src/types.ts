@@ -99,7 +99,7 @@ export interface SimpleCalendarProps {
     minuteStep?: number; // 분 단위 간격 (기본값: 1)
     secondStep?: number; // 초 단위 간격 (기본값: 1)
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부
-    locale?: LocaleProp; // 로케일 (기본값: 'ko')
+    locale?: LocaleProp; // 로케일 (기본값: 앱 전역 언어 — setMuiDatetimePickerLocale, 처음엔 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }
 
@@ -119,7 +119,7 @@ export interface TimePickerProps {
     autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: false)
     centered?: boolean; // 앵커 팝오버 대신 화면 중앙 다이얼로그로 크게 표시 (모바일용, 기본값: false)
     timeVariant?: TimeSelectorVariant; // 고르는 방식 (기본값: "list"). "wheel" 이면 바퀴 + 취소/확인(autoApply 무시), 분 간격 기본 5
-    locale?: LocaleProp; // 로케일 (기본값: 'ko')
+    locale?: LocaleProp; // 로케일 (기본값: 앱 전역 언어 — setMuiDatetimePickerLocale, 처음엔 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }
 
@@ -146,7 +146,7 @@ export interface TimeSelectorProps {
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부 (기본값: false)
     size?: TimeSelectorSize; // 항목/헤더 크기 (기본값: "medium")
     variant?: TimeSelectorVariant; // 고르는 방식 (기본값: "list"). "wheel" 은 showHeader·size·hideDisabledTime 을 쓰지 않는다
-    locale?: LocaleProp; // 로케일 — wheel 의 오전/오후 글자 (기본값: 'ko')
+    locale?: LocaleProp; // 로케일 — wheel 의 오전/오후 글자 (기본값: 앱 전역 언어 — setMuiDatetimePickerLocale, 처음엔 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }
 
@@ -172,7 +172,7 @@ export interface DatePickerProps
     showToday?: boolean; // 오늘 버튼 표시 여부
     showFooter?: boolean; // 푸터 표시 여부 (기본값: true)
     autoApply?: boolean; // 선택 즉시 적용 여부 (기본값: true). 푸터 없음과 동시에 false면 내부적으로 true로 보정됨
-    locale?: LocaleProp; // 로케일 (기본값: 'ko')
+    locale?: LocaleProp; // 로케일 (기본값: 앱 전역 언어 — setMuiDatetimePickerLocale, 처음엔 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
     monthOnly?: boolean; // 년월만 선택 (기본값: false)
     yearOnly?: boolean; // 년도만 선택 (기본값: false)
@@ -210,6 +210,6 @@ export interface DateTimePickerProps
     secondStep?: number; // 초 단위 간격
     hideDisabledTime?: boolean; // 선택 불가 시간 숨김 여부
     timeVariant?: TimeSelectorVariant; // 시간 고르는 방식 (기본값: "list"). "wheel" 이면 달력 아래 바퀴를 붙인 한 창 + 취소/확인 — 날짜·시간을 확인할 때 한꺼번에 알린다(autoApply 무시), 분 간격 기본 5
-    locale?: LocaleProp; // 로케일 (기본값: 'ko')
+    locale?: LocaleProp; // 로케일 (기본값: 앱 전역 언어 — setMuiDatetimePickerLocale, 처음엔 'ko')
     texts?: CalendarTexts; // 텍스트 부분 커스터마이징
 }

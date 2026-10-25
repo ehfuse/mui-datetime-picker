@@ -19,7 +19,7 @@ import { OverlayScrollbar } from "@ehfuse/overlay-scrollbar";
 import type { OverlayScrollbarRef } from "@ehfuse/overlay-scrollbar";
 import { TimeSelector } from "./TimeSelector";
 import type { SimpleCalendarProps, ViewMode } from "./types";
-import { resolveLocale } from "./locale";
+import { fillLocaleText, useCalendarLocale } from "./locale";
 import {
     getWeekInfo,
     isSameDay,
@@ -90,7 +90,7 @@ export function SimpleCalendar({
     const saturdayColor = styles?.saturdayColor ?? "primary.main";
 
     // 로케일 해석 및 병합 (texts가 있으면 부분 덮어쓰기)
-    const resolvedLocale = resolveLocale(locale);
+    const resolvedLocale = useCalendarLocale(locale);
     const mergedLocale = useMemo(
         () => (texts ? { ...resolvedLocale, ...texts } : resolvedLocale),
         [resolvedLocale, texts],
@@ -562,7 +562,7 @@ export function SimpleCalendar({
             if (monthOnly || yearOnly) {
                 return (
                     <Typography variant="body2" fontWeight={600}>
-                        연도 선택
+                        {mergedLocale.selectYear ?? "Select year"}
                     </Typography>
                 );
             }
@@ -587,7 +587,7 @@ export function SimpleCalendar({
                         fontWeight={600}
                         sx={{ flex: 1, textAlign: "center" }}
                     >
-                        연도 선택
+                        {mergedLocale.selectYear ?? "Select year"}
                     </Typography>
                     <Box sx={{ width: 28 }} />
                 </>
@@ -607,7 +607,7 @@ export function SimpleCalendar({
                         fontWeight={600}
                         sx={{ flex: 1, textAlign: "center" }}
                     >
-                        {tempYear}년 - 월 선택
+                        {fillLocaleText(mergedLocale.selectMonth ?? "{{year}} - Select month", { year: tempYear })}
                     </Typography>
                     <Box sx={{ width: 28 }} /> {/* 균형을 위한 빈 공간 */}
                 </>
@@ -634,7 +634,7 @@ export function SimpleCalendar({
                         transition: "background-color 0.15s",
                     }}
                 >
-                    {year}년 {mergedLocale.months[month]}
+                    {fillLocaleText(mergedLocale.yearMonth ?? "{{month}} {{year}}", { year, month: mergedLocale.months[month] })}
                 </Typography>
                 <IconButton size="small" onClick={goToNextMonth}>
                     <ChevronRight />

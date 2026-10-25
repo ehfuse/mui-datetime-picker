@@ -11,7 +11,7 @@ import { Box, Popover, Button, Dialog } from "@mui/material";
 import type { PopoverProps } from "@mui/material/Popover";
 import { TimeSelector } from "./TimeSelector";
 import type { TimePickerProps, AnchorElType } from "./types";
-import { resolveLocale } from "./locale";
+import { useCalendarLocale } from "./locale";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
 function resolveAnchorEl(
@@ -50,7 +50,7 @@ export function TimePicker({
     const minuteStep = minuteStepProp ?? (isWheel ? 5 : 1);
 
     // 로케일 해석 및 병합 (texts가 있으면 부분 덮어쓰기)
-    const resolvedLocale = resolveLocale(locale);
+    const resolvedLocale = useCalendarLocale(locale);
     const mergedLocale = useMemo(
         () => (texts ? { ...resolvedLocale, ...texts } : resolvedLocale),
         [resolvedLocale, texts],

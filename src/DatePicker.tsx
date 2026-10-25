@@ -13,7 +13,6 @@ import type { PopoverProps } from "@mui/material/Popover";
 import type { SxProps, Theme } from "@mui/material/styles";
 import { SimpleCalendar } from "./SimpleCalendar";
 import type { DatePickerProps, AnchorElType } from "./types";
-import { defaultLocale } from "./locale";
 import { resolveFooterAndAutoApply } from "./utils";
 
 // anchorEl이 RefObject인지 확인하고 실제 엘리먼트 반환
@@ -52,7 +51,7 @@ export function DatePicker({
     transformOrigin = { vertical: "top", horizontal: "left" },
     slotProps,
     // 로케일 관련
-    locale = defaultLocale,
+    locale,
     texts,
     // 년월만 선택
     monthOnly = false,
