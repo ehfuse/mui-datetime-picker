@@ -108,10 +108,14 @@ function WheelColumn({ items, value, onSelect, ariaLabel, loop = false }: WheelC
         const idx = rowOf(value, currentRow);
         if (idx < 0) return;
         // 손대기 전(창이 열리며 값이 채워질 때)은 바로 옮긴다 — 부드럽게 굴리면 열리면서 줄이 휙 지나간다.
+        // 보이는 글자가 같으면(오전/오후를 바꿔 4시 → 16시) 굴리지 않고 그 자리에서 옮긴다(1.1.1, 2026-10-29 사용자 지적 —
+        // 12칸을 굴러가 한 바퀴 돌아 다시 4시가 됐다). 줄 모양이 같아 눈에는 그대로 서 있다.
+        const sameLabel = items[itemAt(currentRow)]?.label === items[itemAt(idx)]?.label;
         el.scrollTo({
             top: idx * WHEEL_ITEM_HEIGHT,
-            behavior: touchedRef.current ? "smooth" : "auto",
+            behavior: touchedRef.current && !sameLabel ? "smooth" : "auto",
         });
+        if (sameLabel) setCenterIndex(idx);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
