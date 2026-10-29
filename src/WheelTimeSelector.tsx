@@ -99,7 +99,8 @@ function WheelColumn({ items, value, onSelect, ariaLabel, loop = false }: WheelC
     }, []);
 
     // 바깥에서 값이 바뀌면(범위 밖이라 되돌림 등) 그 줄로 굴러간다. 내가 알린 값이면 이미 그 자리다.
-    useEffect(() => {
+    // 그리기 전에 옮긴다(useLayoutEffect) — 그린 뒤 옮기면 한 장면 동안 옛 자리가 보인다.
+    useLayoutEffect(() => {
         lastEmittedRef.current = value;
         const el = ref.current;
         if (!el) return;
@@ -107,15 +108,23 @@ function WheelColumn({ items, value, onSelect, ariaLabel, loop = false }: WheelC
         if (items[itemAt(currentRow)]?.value === value) return;
         const idx = rowOf(value, currentRow);
         if (idx < 0) return;
-        // 손대기 전(창이 열리며 값이 채워질 때)은 바로 옮긴다 — 부드럽게 굴리면 열리면서 줄이 휙 지나간다.
         // 보이는 글자가 같으면(오전/오후를 바꿔 4시 → 16시) 굴리지 않고 그 자리에서 옮긴다(1.1.1, 2026-10-29 사용자 지적 —
         // 12칸을 굴러가 한 바퀴 돌아 다시 4시가 됐다). 줄 모양이 같아 눈에는 그대로 서 있다.
-        const sameLabel = items[itemAt(currentRow)]?.label === items[itemAt(idx)]?.label;
+        // 깜빡이지 않게(1.1.2, 사용자 지적): ① 가운데 벌로 바로 간다 — 다른 벌로 갔다가 멈춤 처리가 가운데 벌로 또 옮기지 않게
+        // ② 옮기는 동안 글자색 전환을 끈다 — 새 가운데 줄이 회색에서 검정으로 0.15초 바뀌며 깜빡였다.
+        if (items[itemAt(currentRow)]?.label === items[itemAt(idx)]?.label) {
+            const target = loop ? midBase + itemAt(idx) : idx;
+            el.dataset.jump = "1";
+            el.scrollTop = target * WHEEL_ITEM_HEIGHT;
+            setCenterIndex(target);
+            requestAnimationFrame(() => requestAnimationFrame(() => delete el.dataset.jump));
+            return;
+        }
+        // 손대기 전(창이 열리며 값이 채워질 때)은 바로 옮긴다 — 부드럽게 굴리면 열리면서 줄이 휙 지나간다.
         el.scrollTo({
             top: idx * WHEEL_ITEM_HEIGHT,
-            behavior: touchedRef.current && !sameLabel ? "smooth" : "auto",
+            behavior: touchedRef.current ? "smooth" : "auto",
         });
-        if (sameLabel) setCenterIndex(idx);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
@@ -213,6 +222,8 @@ function WheelColumn({ items, value, onSelect, ariaLabel, loop = false }: WheelC
                 scrollbarWidth: "none",
                 "&::-webkit-scrollbar": { display: "none" },
                 WebkitOverflowScrolling: "touch",
+                // 같은 글자 자리로 옮기는 동안(위 값 효과)은 글자색 전환을 끈다 — 깜빡임 방지
+                "&[data-jump] .MuiTypography-root": { transition: "none" },
             }}
         >
             <Box sx={{ height: EDGE_PAD }} />
